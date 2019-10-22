@@ -1,0 +1,22 @@
+" vint: -ProhibitSetNoCompatible
+
+if has('win32')
+    set runtimepath=$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,C:\vader,C:\testplugin
+else
+    set runtimepath=/home/vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,/testplugin,/vader
+endif
+
+filetype plugin indent on
+syntax on
+
+set nocompatible
+
+let s:profile_file = $VIM_PROFILE_FILE
+if has('profile') && !empty(s:profile_file)
+    execute 'profile start ' . s:profile_file
+    profile! file after/**.vim
+    profile! file autoload/**.vim
+    profile! file ftplugin/**.vim
+    profile! file plugin/**.vim
+    profile! file syntax/**.vim
+endif

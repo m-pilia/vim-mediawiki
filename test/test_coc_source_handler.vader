@@ -1,0 +1,126 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  let Function = GetFunction(b:script, 'handler')
+
+  let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_completion_namespaces = {
+  \ 'default': {
+  \       '[[': 0,
+  \       '{{': 10,
+  \       '[[File:': 6,
+  \       '[[Category:': 14,
+  \   },
+  \ }
+
+  let mock = NewFunctionMock()
+
+After:
+  unlet! b:script
+
+  unlet! Function
+  unlet! mock
+  unlet! prefix
+  unlet! data
+  unlet! expected
+
+  unlet! g:vim_mediawiki_completion_namespaces
+  unlet! b:vim_mediawiki_completion_namespaces
+  unlet! g:vim_mediawiki_site
+  unlet! b:vim_mediawiki_site
+
+
+Execute(Test s:handler with no input):
+  let prefix = ['[[', 'some text']
+  let data = []
+
+  call Function(prefix, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual [v:false], mock.args[0]
+
+
+Execute(Test s:handler with empty input):
+  let prefix = ['[[', 'some text']
+  let data = [' ']
+
+  call Function(prefix, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual [v:false], mock.args[0]
+
+
+Execute(Test s:handler with wikilink input):
+  let prefix = ['[[', 'some example text']
+  let data = [
+  \   'some example text with a completion',
+  \   'some example text with another completion',
+  \ ]
+
+  let expected = [
+  \   {
+  \     'menu': 'some example text with a completion',
+  \     'word': 'text with a completion',
+  \   },
+  \   {
+  \     'menu': 'some example text with another completion',
+  \     'word': 'text with another completion',
+  \   },
+  \ ]
+
+  call Function(prefix, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual 1, len(mock.args[0])
+  AssertEqual expected, mock.args[0][0]
+
+
+Execute(Test s:handler with template input):
+  let prefix = ['{{', 'some example text']
+  let data = [
+  \   'Template:some example text with a completion',
+  \   'Template:some example text with another completion',
+  \ ]
+
+  let expected = [
+  \   {
+  \     'menu': 'Template:some example text with a completion',
+  \     'word': 'text with a completion',
+  \   },
+  \   {
+  \     'menu': 'Template:some example text with another completion',
+  \     'word': 'text with another completion',
+  \   },
+  \ ]
+
+  call Function(prefix, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual 1, len(mock.args[0])
+  AssertEqual expected, mock.args[0][0]
+
+
+Execute(Test s:handler with file input):
+  let prefix = ['[[File:', 'some example text']
+  let data = [
+  \   'File:some example text with a completion',
+  \   'File:some example text with another completion',
+  \ ]
+
+  let expected = [
+  \   {
+  \     'menu': 'File:some example text with a completion',
+  \     'word': 'text with a completion',
+  \   },
+  \   {
+  \     'menu': 'File:some example text with another completion',
+  \     'word': 'text with another completion',
+  \   },
+  \ ]
+
+  call Function(prefix, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual 1, len(mock.args[0])
+  AssertEqual expected, mock.args[0][0]

@@ -1,0 +1,112 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  let Function = GetFunction(b:script, 'get_prefix')
+
+  let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_completion_namespaces = {
+  \ 'default': {
+  \       '[[': 0,
+  \       '{{': 10,
+  \       '[[File:': 6,
+  \       '[[Category:': 14,
+  \   },
+  \ }
+
+
+After:
+  unlet! b:script
+
+  unlet! Function
+  unlet! mock
+  unlet! options
+
+  unlet! g:vim_mediawiki_completion_namespaces
+  unlet! b:vim_mediawiki_completion_namespaces
+  unlet! g:vim_mediawiki_site
+  unlet! b:vim_mediawiki_site
+
+
+Execute(Test s:get_prefix for wikilink):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar [[Some text and more]] after',
+  \ 'colnr': 20,
+  \ }
+
+  AssertEqual
+  \ ['[[', 'Some text'],
+  \ Function(options)
+
+
+Execute(Test s:get_prefix for file):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar [[File:Some text and more]] after',
+  \ 'colnr': 25,
+  \ }
+
+  AssertEqual
+  \ ['[[File:', 'Some text'],
+  \ Function(options)
+
+
+Execute(Test s:get_prefix before wikilink):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar [[File:Some text and more]] after',
+  \ 'colnr': 5,
+  \ }
+
+  AssertEqual
+  \ [],
+  \ Function(options)
+
+
+Execute(Test s:get_prefix after wikilink):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar [[File:Some text and more]] after',
+  \ 'colnr': 36,
+  \ }
+
+  AssertEqual
+  \ [],
+  \ Function(options)
+
+
+Execute(Test s:get_prefix for template):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar {{Some text and more}} after',
+  \ 'colnr': 20,
+  \ }
+
+  AssertEqual
+  \ ['{{', 'Some text'],
+  \ Function(options)
+
+
+Execute(Test s:get_prefix for template argument):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar {{{Some text and more}}} after',
+  \ 'colnr': 20,
+  \ }
+
+  AssertEqual
+  \ [],
+  \ Function(options)
+
+
+Execute(Test s:get_prefix for magic word):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar {{#Some text and more}} after',
+  \ 'colnr': 20,
+  \ }
+
+  AssertEqual
+  \ [],
+  \ Function(options)

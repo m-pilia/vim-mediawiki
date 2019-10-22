@@ -1,0 +1,27 @@
+Before:
+  unlet! g:vim_mediawiki_plugin_loaded
+
+
+Execute(Test plugin loading):
+  " Test loading
+  source plugin/mediawiki.vim
+
+  AssertEqual 1, g:vim_mediawiki_plugin_loaded
+
+  " Test double loading
+  source plugin/mediawiki.vim
+
+  AssertEqual 1, g:vim_mediawiki_plugin_loaded
+
+  AssertEqual {
+    \ 'default': {
+    \       '[[': 0,
+    \       '{{': 10,
+    \       '[[File:': 6,
+    \       '[[Category:': 14,
+    \   },
+    \ },
+    \ g:vim_mediawiki_completion_namespaces
+  AssertEqual 'en.wikipedia.org', g:vim_mediawiki_site
+  AssertEqual 5, g:vim_mediawiki_completion_prefix_length
+  AssertEqual 15, g:vim_mediawiki_completion_limit

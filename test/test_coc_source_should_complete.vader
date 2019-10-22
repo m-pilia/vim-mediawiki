@@ -1,0 +1,41 @@
+Before:
+  let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_completion_namespaces = {
+  \ 'default': {
+  \       '[[': 0,
+  \       '{{': 10,
+  \       '[[File:': 6,
+  \       '[[Category:': 14,
+  \   },
+  \ }
+
+
+After:
+  unlet! g:vim_mediawiki_completion_namespaces
+  unlet! b:vim_mediawiki_completion_namespaces
+  unlet! g:vim_mediawiki_site
+  unlet! b:vim_mediawiki_site
+
+
+Execute(Test coc#source#mediawiki#should_complete with completion):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar {{Some text and more}} after',
+  \ 'colnr': 20,
+  \ }
+
+  Assert
+  \ coc#source#mediawiki#should_complete(options),
+  \ 'Complete on positive input'
+
+
+Execute(Test coc#source#mediawiki#should_complete with no completion):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar {{#Some text and more}} after',
+  \ 'colnr': 20,
+  \ }
+
+  Assert
+  \ !coc#source#mediawiki#should_complete(options),
+  \ 'Do not complete on negative input'

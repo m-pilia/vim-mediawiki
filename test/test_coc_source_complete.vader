@@ -1,0 +1,51 @@
+Before:
+  let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_completion_limit = 5
+  let g:vim_mediawiki_completion_namespaces = {
+  \ 'default': {
+  \       '[[': 0,
+  \       '{{': 10,
+  \       '[[File:': 6,
+  \       '[[Category:': 14,
+  \   },
+  \ }
+
+  let mock = NewFunctionMock()
+
+
+After:
+  unlet! g:vim_mediawiki_completion_namespaces
+  unlet! b:vim_mediawiki_completion_namespaces
+  unlet! g:vim_mediawiki_completion_limit
+  unlet! b:vim_mediawiki_completion_limit
+  unlet! g:vim_mediawiki_site
+  unlet! b:vim_mediawiki_site
+
+  unlet! mock
+  unlet! options
+  unlet! expected_command
+
+
+" Use a mock of the Python interpreter that echoes all its arguments
+Execute(Test coc#source#mediawiki#complete):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar [[Some text and more]] after',
+  \ 'colnr': 20,
+  \ }
+
+  let expected_command = join([
+  \   '/testplugin/scripts/list_pages.py',
+  \   '--site', g:vim_mediawiki_site,
+  \   '--prefix', 'Some text',
+  \   '--namespace', string(g:vim_mediawiki_completion_namespaces['default']['[[']),
+  \   '--limit', string(g:vim_mediawiki_completion_limit),
+  \   ], ' ')
+
+  call coc#source#mediawiki#complete(options, mock.function)
+  sleep 500m
+
+  AssertEqual 1, len(mock.args[0])
+  AssertEqual
+  \ [{'word': expected_command, 'menu': expected_command}],
+  \ mock.args[0][0]
