@@ -23,9 +23,12 @@ If [coc.nvim](https://github.com/neoclide/coc.nvim) is installed and configured
 properly, the completion source should work out-of-the-box for buffers of type
 `mediawiki`. Completion is triggered when typing inside double square brackets
 or double braces. Multi-word completion is supported, so completions will be
-suggested when typing more than one word inside the brackets.
+suggested when typing more than one word inside the brackets, together with a
+hint of the full page name.
 
-If you do not use [coc.nvim], you may be able to use the function
+![image](https://user-images.githubusercontent.com/8300317/67492770-9bff7380-f67f-11e9-9dd5-bf621ffb30df.png)
+
+If you do not use coc.nvim, you may be able to use the function
 `coc#source#mediawiki#complete()` to implement an
 [omnifunc](https://vimhelp.org/options.txt.html#%27omnifunc%27), or to write an
 adapter to plug it in other completion mechanisms. The API used by this source
