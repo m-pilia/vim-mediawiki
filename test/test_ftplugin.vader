@@ -1,0 +1,69 @@
+Before:
+  let g:vim_mediawiki_mappings = 0
+
+
+After:
+  unlet! b:did_ftplugin
+  unlet! g:vim_mediawiki_mappings
+  mapclear
+
+
+Execute(Test settings):
+  runtime macros/matchit.vim
+
+  runtime ftplugin/mediawiki.vim
+
+  AssertEqual 'n:#,n:*,n::,s:{|,m:|,ex:|}', &comments
+  AssertEqual 'getline(v:lnum)=~''^\(=\+\)[^=]\+\1\(\s*<!--.*-->\)\=\s*$''?">".(len(matchstr(getline(v:lnum),''^=\+''))-1):"="', &foldexpr
+  AssertEqual 'expr', &foldmethod
+  Assert &formatoptions =~# 'r', 'formatoptions r not correctly set'
+  Assert &formatoptions =~# 'o', 'formatoptions o not correctly set'
+  Assert &formatoptions =~# 'q', 'formatoptions q not correctly set'
+  Assert &formatoptions =~# 'l', 'formatoptions l not correctly set'
+  Assert &formatoptions !~# 't', 'formatoptions t not correctly set'
+  Assert &formatoptions !~# 'c', 'formatoptions c not correctly set'
+  Assert &formatoptions !~# 'a', 'formatoptions a not correctly set'
+  AssertEqual 1, exists('b:match_words')
+  AssertEqual 1, exists('b:match_ignorecase')
+  AssertEqual 1, &wrap
+  AssertEqual 1, &linebreak
+  AssertEqual 0, &textwidth
+
+
+Execute(Test double load):
+  runtime ftplugin/mediawiki.vim
+
+  AssertEqual 1, b:did_ftplugin
+
+  " Test double load
+  runtime ftplugin/mediawiki.vim
+
+  AssertEqual 1, b:did_ftplugin
+
+
+Execute(Test no default mappings):
+  runtime ftplugin/mediawiki.vim
+
+  AssertNoMapping 'nmap', 'j'
+  AssertNoMapping 'nmap', 'k'
+  AssertNoMapping 'nmap', '0'
+  AssertNoMapping 'nmap', '^'
+  AssertNoMapping 'nmap', '$'
+  AssertNoMapping 'nmap', 'D'
+  AssertNoMapping 'nmap', 'C'
+  AssertNoMapping 'nmap', 'A'
+
+
+Execute(Test mappings):
+  let g:vim_mediawiki_mappings = 1
+
+  runtime ftplugin/mediawiki.vim
+
+  AssertMapping 'nmap', 'j', "v:count == 0 ? 'gj' : 'j'"
+  AssertMapping 'nmap', 'k', "v:count == 0 ? 'gk' : 'k'"
+  AssertMapping 'nmap', '0', 'g0'
+  AssertMapping 'nmap', '^', 'g^'
+  AssertMapping 'nmap', '$', 'g$'
+  AssertMapping 'nmap', 'D', 'dg$'
+  AssertMapping 'nmap', 'C', 'cg$'
+  AssertMapping 'nmap', 'A', 'g$a'

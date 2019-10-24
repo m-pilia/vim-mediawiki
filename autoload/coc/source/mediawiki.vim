@@ -1,16 +1,13 @@
 let s:script = expand('<sfile>:p:h:h:h:h') . '/scripts/list_pages.py'
 
-" Get a variable (preferably buffer-local)
-function! s:get_var(bufnr, name) abort
-    let l:var_name = 'vim_mediawiki_' . a:name
-    let l:variables = getbufvar(str2nr(a:bufnr), '', {})
-    return get(l:variables, l:var_name, g:[l:var_name])
-endfunction
-
 " Get the dictionary of completion namespaces for a buffer
 function! s:get_namespaces(bufnr) abort
-    let l:ns = s:get_var(a:bufnr, 'completion_namespaces')
-    let l:site = s:get_var(a:bufnr, 'site')
+    let l:ns = mediawiki#get_var(a:bufnr, 'completion_namespaces')
+    if exists('b:vim_mediawiki_completion_namespaces') &&
+    \  exists('g:vim_mediawiki_completion_namespaces')
+        let l:ns = extend(copy(l:ns), g:vim_mediawiki_completion_namespaces, 'keep')
+    endif
+    let l:site = mediawiki#get_var(a:bufnr, 'site')
     return index(keys(l:ns), l:site) >= 0 ? l:ns[l:site] : l:ns['default']
 endfunction
 
@@ -20,13 +17,17 @@ endfunction
 " e.g. for wikilinks it is '[[', for templates '{{', for files '[[File:'
 " and so on. The completion prefix is the prefix of the page to be
 " completed, i.e. the characters inserted after the namespace prefix.
+"
+" When looking for the opening signs, avoid matching `{{{` (template
+" arguments) and `{{#` (magic words).
 function! s:get_prefix(options) abort
     let l:namespaces = keys(s:get_namespaces(a:options.bufnr))
+    let l:min_prefix_length = mediawiki#get_var(a:options.bufnr, 'completion_prefix_length')
     for l:namespace in reverse(sort(l:namespaces))
         let l:pattern = '\c\V\^\.\*{\@<!' . l:namespace . '\[{#]\@!\(\[^\]\}]\*\)\$'
         let l:match = matchlist(a:options.line[0:a:options.colnr - 2], l:pattern)
         if len(l:match)
-            if len(l:match[1]) < g:vim_mediawiki_completion_prefix_length
+            if len(l:match[1]) < l:min_prefix_length
                 return []
             endif
             return [l:namespace, l:match[1]]
@@ -78,10 +79,10 @@ function! coc#source#mediawiki#complete(options, callback) abort
 
     let l:command = [
     \   'python', s:script,
-    \   '--site', s:get_var(a:options.bufnr, 'site'),
+    \   '--site', mediawiki#get_var(a:options.bufnr, 'site'),
     \   '--prefix', l:prefix[1],
     \   '--namespace', string(l:namespace),
-    \   '--limit', string(s:get_var(a:options.bufnr, 'completion_limit')),
+    \   '--limit', string(mediawiki#get_var(a:options.bufnr, 'completion_limit')),
     \ ]
 
     if has('nvim')

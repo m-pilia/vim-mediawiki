@@ -1,0 +1,22 @@
+Before:
+  source test/utils.vim
+
+
+After:
+  unlet! b:vim_mediawiki_some_variable
+  unlet! g:vim_mediawiki_some_variable
+
+
+Execute(Test mediawiki#get_var()):
+  let g:vim_mediawiki_some_variable = 'some_global_value'
+
+  AssertEqual
+  \ g:vim_mediawiki_some_variable,
+  \ mediawiki#get_var(bufnr(''), 'some_variable')
+
+  let b:vim_mediawiki_some_variable = 'some_local_value'
+
+  AssertEqual
+  \ b:vim_mediawiki_some_variable,
+  \ mediawiki#get_var(bufnr(''), 'some_variable')
+

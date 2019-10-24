@@ -73,3 +73,34 @@ function! NewFunctionMock() abort
     let l:mock.function = function('s:call_mock', [l:mock])
     return l:mock
 endfunction
+
+" Get a list of mappings
+function! s:get_mapping(mode, mapping) abort
+    redir => l:out
+    silent execute a:mode . ' ' . a:mapping
+    redir END
+    return split(l:out, '\n')
+endfunction
+
+" Check whether a mapping is defined
+function! s:assert_mapping(mode, mapping, command) abort
+    for l:line in s:get_mapping(a:mode, a:mapping)
+        if l:line =~# '\V' . escape(a:command, '/\')
+            Assert 1, a:mode . ' "' . a:mapping . '" set to "' . a:command . '"'
+            return
+        endif
+    endfor
+    Assert 0, a:mode . ' "' . a:mapping . '" not set to "' . a:command . '"'
+endfunction
+
+" Check whether a mapping is not defined
+function! s:assert_no_mapping(mode, mapping) abort
+    if s:get_mapping(a:mode, a:mapping)[0] !~# 'No mapping found'
+        Assert 0, a:mode . ' "' . a:mapping . '" is set while it should not'
+        return
+    endif
+    Assert 1, a:mode . ' "' . a:mapping . '" is not set'
+endfunction
+
+command! -nargs=+ AssertMapping :call s:assert_mapping(<args>)
+command! -nargs=+ AssertNoMapping :call s:assert_no_mapping(<args>)

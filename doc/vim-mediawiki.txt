@@ -8,6 +8,7 @@ CONTENTS                                              *vim-mediawiki-contents*
     Installation..................|vim-mediawiki-installation|
     Auto-completion...............|vim-mediawiki-auto-completion|
     Options.......................|vim-mediawiki-options|
+    Mappings......................|vim-mediawiki-mappings|
     License.......................|vim-mediawiki-license|
 
 
@@ -45,18 +46,9 @@ A set of variables allows to customise the behaviour of the plugin. All
 variables can either be set globally as `g:vim_mediawiki_...` or locally for
 each buffer with `b:vim_mediawiki_...`.
 
-g:vim_mediawiki_site                                    *g:vim_mediawiki_site*
-    Type: |string|
-    Default: `en.wikipedia.org`
-
-    Address of the wiki to edit.
-
-    Example:
->
-    let g:vim_mediawiki_site = 'en.wikipedia.org'
-<
 
 g:vim_mediawiki_completion_namespaces  *g:vim_mediawiki_completion_namespaces*
+                                       *b:vim_mediawiki_completion_namespaces*
     Type: |dict|
     Default: `{
     \ 'default': {
@@ -67,9 +59,10 @@ g:vim_mediawiki_completion_namespaces  *g:vim_mediawiki_completion_namespaces*
     \   },
     \ }`
 
-    Maps trigger sequences to namespace numbers.
-
-    Example:
+    Maps trigger sequences to namespace numbers on the |g:vim_mediawiki_site|
+    being edited (https://www.mediawiki.org/wiki/Help:Namespaces). Only the
+    namespaces listed in this map will be completed. A `default` entry is used
+    for sites not present among the keys. The pre-defined configuration is
 >
     let g:vim_mediawiki_completion_namespaces = {
     \ 'default': {
@@ -80,9 +73,29 @@ g:vim_mediawiki_completion_namespaces  *g:vim_mediawiki_completion_namespaces*
     \   },
     \ }
 <
+    and the custom configuration is merged with it, so the `default` key is
+    present unless it is overridden. Moreover, the buffer-local configuration
+    is merged with the global configuration, so it is not necessary to
+    duplicate the whole configuration in buffer-local variables, but it is
+    sufficient to add or overwrite only the desired sites. To disable
+    completion for a site, map it to an empty dictionary.
+
+    Example:
+>
+    let g:vim_mediawiki_completion_namespaces = {
+    \ 'sv.wikipedia.org': {
+    \       '[[': 0,
+    \       '{{': 10,
+    \       '[[File:': 6,
+    \       '[[Kategori:': 14,
+    \   },
+    \ }
+<
+
 
 g:vim_mediawiki_completion_prefix_length
                                     *g:vim_mediawiki_completion_prefix_length*
+                                    *b:vim_mediawiki_completion_prefix_length*
     Type: |number|
     Default: `5`
 
@@ -92,10 +105,13 @@ g:vim_mediawiki_completion_prefix_length
     Example:
 >
     let g:vim_mediawiki_completion_prefix_length = 5
+    let b:vim_mediawiki_completion_prefix_length = 4
 <
+
 
 g:vim_mediawiki_completion_prefix_limit
                                      *g:vim_mediawiki_completion_prefix_limit*
+                                     *b:vim_mediawiki_completion_prefix_limit*
     Type: |number|
     Default: `15`
 
@@ -104,13 +120,121 @@ g:vim_mediawiki_completion_prefix_limit
     Example:
 >
     let g:vim_mediawiki_completion_limit = 15
+    let b:vim_mediawiki_completion_limit = 20
 <
+
+
+g:vim_mediawiki_ignored_wikilangs          *g:vim_mediawiki_ignored_wikilangs*
+                                           *b:vim_mediawiki_ignored_wikilangs*
+    Type: |list|
+    Default: `[]`
+
+    List of languages (identified by their wiki name) within `<source>`
+    or `<syntaxhighlight>` to not be syntax-highlighted.
+
+    Example:
+>
+    let g:vim_mediawiki_ignored_wikilang = ['cobol']
+    let b:vim_mediawiki_ignored_wikilang = ['pascal']
+<
+
+
+g:vim_mediawiki_mappings                            *g:vim_mediawiki_mappings*
+                                                    *b:vim_mediawiki_mappings*
+    Type: |number|
+    Default: `0`
+
+    If true, enable |vim-mediawiki-mappings|.
+
+    Example:
+>
+    let g:vim_mediawiki_mappings = 0
+    let b:vim_mediawiki_mappings = 1
+<
+
+
+g:vim_mediawiki_preloaded_wikilangs      *g:vim_mediawiki_preloaded_wikilangs*
+                                         *b:vim_mediawiki_preloaded_wikilangs*
+    Type: |list|
+    Default: `[]`
+
+    List of languages (identified by their wiki name) within `<source>`
+    or `<syntaxhighlight>` whose syntax will be pre-loaded, regardless
+    of whether the language is used within the buffer.
+
+    Example:
+>
+    let g:vim_mediawiki_preloaded_wikilangs = ['c']
+    let b:vim_mediawiki_preloaded_wikilangs = ['python']
+<
+
+
+g:vim_mediawiki_site                                    *g:vim_mediawiki_site*
+                                                        *b:vim_mediawiki_site*
+    Type: |string|
+    Default: `en.wikipedia.org`
+
+    Address of the wiki to edit.
+
+    Example:
+>
+    let g:vim_mediawiki_site = 'en.wikipedia.org'
+    let b:vim_mediawiki_site = 'de.wikipedia.org'
+<
+
+
+g:vim_mediawiki_wikilang_map                    *g:vim_mediawiki_wikilang_map*
+                                                *b:vim_mediawiki_wikilang_map*
+    Type: |list|
+    Default: `[]`
+
+    Dictionary mapping the wiki name of a language to a vim syntax file type.
+
+    Example:
+>
+    let g:vim_mediawiki_wikilang_map = {'c': 'cpp'}
+    let b:vim_mediawiki_wikilang_map = {'c': 'cpp'}
+<
+
+
+==============================================================================
+MAPPINGS                                              *vim-mediawiki-mappings*
+
+No mappings are set out-of-the-box. The following optional mappings can
+be enabled with |g:vim_mediawiki_mappings|:
+
+    nnoremap <buffer> k gk
+    nnoremap <buffer> j gj
+    nnoremap <buffer> 0 g0
+    nnoremap <buffer> ^ g^
+    nnoremap <buffer> $ g$
+    nnoremap <buffer> D dg$
+    nnoremap <buffer> C cg$
+    nnoremap <buffer> A g$a
 
 
 ==============================================================================
 LICENSE                                                *vim-mediawiki-license*
 
-This software is distributed under the MIT License.
+The `syntax/mediawiki.vim` file is based on code originally published on
+  http://en.wikipedia.org/wiki/Wikipedia:Text_editor_support
+in the public domain, and distributed within
+* wikipedia.vim (https://www.vim.org/scripts/script.php?script_id=1787)
+* mediawiki.vim (https://www.vim.org/scripts/script.php?script_id=3970)
 
-Full license: https://github.com/m-pilia/vim-mediawiki/blob/master/LICENSE
+The `ftplugin/mediawiki.vim` file contains some portions of code from
+the HTML ftplugin of the vim runtime by Johannes Zellner and Benji
+Fisher:
+  https://github.com/vim/vim/blob/946e27ab65/runtime/ftplugin/html.vim#L28-L35
+and from mediawiki.vim by Jean-Denis Vauguet (a.k.a. chikamichi):
+  https://github.com/chikamichi/mediawiki.vim
+
+The `autoload/mediawiki/fenced_languages.vim` file is adapted from
+mediawiki.vim by Olivier Teulière (a.k.a. ipkiss42):
+  https://github.com/chikamichi/mediawiki.vim/blob/26e573726/autoload/mediawiki.vim
+
+All the original parts of this software, where not differently
+attributed or licensed, are distributed under the MIT license. The full
+text of the license is available at:
+  https://github.com/m-pilia/vim-mediawiki/blob/master/LICENSE
 

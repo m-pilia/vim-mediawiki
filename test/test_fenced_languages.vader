@@ -1,0 +1,125 @@
+Before:
+  let b:script = 'autoload/mediawiki/fenced_languages.vim'
+  source test/utils.vim
+
+  syntax clear
+
+  unlet! g:vim_mediawiki_preloaded_wikilangs
+  unlet! g:vim_mediawiki_ignored_wikilangs
+  unlet! g:vim_mediawiki_wikilang_map
+
+
+After:
+  unlet! b:script
+
+  unlet! Function
+  unlet! already_included_ft
+
+  unlet! g:vim_mediawiki_preloaded_wikilangs
+  unlet! g:vim_mediawiki_ignored_wikilangs
+  unlet! g:vim_mediawiki_wikilang_map
+
+
+Given(Text with code tags):
+  This is an example containing
+  <source lang="c">
+  int some_code(void) {
+    return 0;
+  }
+  </source>
+  and
+  <syntaxhighlight lang="python">
+  def some_other_code():
+    pass
+  </syntaxhighlight>
+  examples.
+
+  This is an example for language override:
+  <source lang="java">
+  class Foo : public Bar
+  {
+    int some_code(void) {
+      return 0;
+    }
+  }
+  </source>
+
+
+Execute(Test s:find_languages_in_buffer()):
+  let Function = GetFunction(b:script, 'find_languages_in_buffer')
+
+  AssertEqual
+  \ ['c', 'java', 'python'],
+  \ sort(Function())
+
+
+Execute(Test s:include_syntax()):
+  let Function = GetFunction(b:script, 'include_syntax')
+
+  runtime syntax/mediawiki.vim
+
+  call Function('c', 'some_group_name')
+
+  AssertSyntax cComment
+  AssertEqual 'mediawiki', b:current_syntax
+
+
+Execute(Test s:define_region() for <source> tags):
+  let Function = GetFunction(b:script, 'define_region')
+
+  runtime syntax/mediawiki.vim
+
+  call Function('c', 'some_group_name', 'c')
+
+  AssertEqual
+  \ 'wiki_c_region',
+  \ synIDattr(synID(4, 4, 0), 'name')
+
+
+Execute(Test s:define_region() for <syntaxhighlight> tags):
+  let Function = GetFunction(b:script, 'define_region')
+
+  runtime syntax/mediawiki.vim
+
+  call Function('python', 'some_group_name', 'python')
+
+  AssertEqual
+  \ 'wiki_python_region',
+  \ synIDattr(synID(10, 4, 0), 'name')
+
+
+Execute(Test s:highlight_wiki_lang()):
+  let Function = GetFunction(b:script, 'highlight_wiki_lang')
+  let already_included_ft = {}
+
+  runtime syntax/mediawiki.vim
+
+  call Function('c', 'c', already_included_ft)
+
+  AssertEqual
+  \ 'cStatement',
+  \ synIDattr(synID(4, 4, 0), 'name')
+
+  Assert has_key(already_included_ft, 'c'), 'Language is not set as included'
+
+
+Execute(Test mediawiki#fenced_languages#perform_highlighting()):
+  let g:vim_mediawiki_preloaded_wikilangs = ['c']
+  let g:vim_mediawiki_ignored_wikilangs = ['python']
+  let g:vim_mediawiki_wikilang_map = {'java': 'cpp'}
+
+  runtime syntax/mediawiki.vim
+
+  call mediawiki#fenced_languages#perform_highlighting()
+
+  AssertEqual
+  \ 'cStatement',
+  \ synIDattr(synID(4, 4, 0), 'name')
+
+  AssertEqual
+  \ 'wikiSyntaxHL',
+  \ synIDattr(synID(10, 4, 0), 'name')
+
+  AssertEqual
+  \ 'cppStructure',
+  \ synIDattr(synID(16, 4, 0), 'name')
