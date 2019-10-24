@@ -1,3 +1,11 @@
 [run]
 plugins = covimerage
 data_file = .coverage_covimerage
+
+[report]
+exclude_lines =
+    pragma: no cover
+    '''
+    """
+    if __name__ == .__main__.:
+
