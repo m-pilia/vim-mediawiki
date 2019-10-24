@@ -58,7 +58,7 @@ endfunction
 function! coc#source#mediawiki#init() abort
     return {
     \ 'priority': 90,
-    \ 'shortcut': 'MediaWiki',
+    \ 'shortcut': 'MW',
     \ 'filetypes': ['mediawiki'],
     \ }
 endfunction

@@ -6,10 +6,12 @@ Query the MediaWiki API to get a list of pages starting with a given prefix.
 
 import argparse
 import itertools
+import sys
+
 import mwclient
 
-if __name__ == '__main__':
 
+def main(argv):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', type=str, required=True,
                         help='Address of the MediaWiki site to query')
@@ -19,7 +21,7 @@ if __name__ == '__main__':
                         help='Namespace for the desired pages')
     parser.add_argument('--limit', type=int, required=True,
                         help='Maximum number of pages to retrieve')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     site = mwclient.Site(args.site)
 
@@ -27,7 +29,7 @@ if __name__ == '__main__':
         'prefix': args.prefix,
         'namespace': str(args.namespace),
         'filterredir': 'nonredirects',
-        'limit': max(50, args.limit),
+        'limit': min(50, args.limit),
         'generator': False,
     }
 
@@ -36,3 +38,7 @@ if __name__ == '__main__':
 
     if result:
         print('\n'.join(result))
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
