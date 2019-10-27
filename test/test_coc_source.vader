@@ -9,8 +9,6 @@ After:
   unlet! Function
   unlet! mock
   unlet! options
-  unlet! b:vim_mediawiki_some_variable
-  unlet! g:vim_mediawiki_some_variable
 
   unlet! g:vim_mediawiki_completion_namespaces
   unlet! b:vim_mediawiki_completion_namespaces
@@ -18,23 +16,7 @@ After:
   unlet! b:vim_mediawiki_site
 
 
-Execute(Test s:get_var):
-  let Function = GetFunction(b:script, 'get_var')
-
-  let g:vim_mediawiki_some_variable = 'some_global_value'
-
-  AssertEqual
-  \ g:vim_mediawiki_some_variable,
-  \ Function(bufnr(''), 'some_variable')
-
-  let b:vim_mediawiki_some_variable = 'some_local_value'
-
-  AssertEqual
-  \ b:vim_mediawiki_some_variable,
-  \ Function(bufnr(''), 'some_variable')
-
-
-Execute(Test s:get_namespaces):
+Execute(Test s:get_namespaces()):
   let Function = GetFunction(b:script, 'get_namespaces')
 
   let g:vim_mediawiki_completion_namespaces = {
@@ -42,12 +24,23 @@ Execute(Test s:get_namespaces):
   \ 'some_site': 'some_site_namespaces',
   \ }
 
+  " Test global retrieval
   let g:vim_mediawiki_site = 'some_site'
 
   AssertEqual
   \ g:vim_mediawiki_completion_namespaces['some_site'],
   \ Function(bufnr(''))
 
+  " Test buffer-local retrieval
+  let b:vim_mediawiki_completion_namespaces = {
+  \ 'some_site': 'some_site_namespaces_ovewritten',
+  \ }
+
+  AssertEqual
+  \ b:vim_mediawiki_completion_namespaces['some_site'],
+  \ Function(bufnr(''))
+
+  " Test default fallback
   let g:vim_mediawiki_site = 'some_unknown_site'
 
   AssertEqual

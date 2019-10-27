@@ -1,0 +1,18 @@
+Before:
+  function! Cleanup() abort
+    syntax clear
+    unlet! b:current_syntax
+  endfunction
+
+  call Cleanup()
+
+
+After:
+  call Cleanup()
+  delfunction Cleanup
+
+
+Execute(Test syntax):
+  runtime syntax/mediawiki.vim
+
+  AssertEqual 'mediawiki', b:current_syntax

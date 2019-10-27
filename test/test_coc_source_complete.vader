@@ -27,7 +27,7 @@ After:
 
 
 " Use a mock of the Python interpreter that echoes all its arguments
-Execute(Test coc#source#mediawiki#complete):
+Execute(Test coc#source#mediawiki#complete()):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar [[Some text and more]] after',

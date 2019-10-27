@@ -31,7 +31,7 @@ After:
   unlet! b:vim_mediawiki_site
 
 
-Execute(Test s:handler with no input):
+Execute(Test s:handler() with no input):
   let prefix = ['[[', 'some text']
   let data = []
 
@@ -41,7 +41,7 @@ Execute(Test s:handler with no input):
   AssertEqual [v:false], mock.args[0]
 
 
-Execute(Test s:handler with empty input):
+Execute(Test s:handler() with empty input):
   let prefix = ['[[', 'some text']
   let data = [' ']
 
@@ -51,7 +51,7 @@ Execute(Test s:handler with empty input):
   AssertEqual [v:false], mock.args[0]
 
 
-Execute(Test s:handler with wikilink input):
+Execute(Test s:handler() with wikilink input):
   let prefix = ['[[', 'some example text']
   let data = [
   \   'some example text with a completion',
@@ -76,7 +76,7 @@ Execute(Test s:handler with wikilink input):
   AssertEqual expected, mock.args[0][0]
 
 
-Execute(Test s:handler with template input):
+Execute(Test s:handler() with template input):
   let prefix = ['{{', 'some example text']
   let data = [
   \   'Template:some example text with a completion',
@@ -101,7 +101,7 @@ Execute(Test s:handler with template input):
   AssertEqual expected, mock.args[0][0]
 
 
-Execute(Test s:handler with file input):
+Execute(Test s:handler() with file input):
   let prefix = ['[[File:', 'some example text']
   let data = [
   \   'File:some example text with a completion',

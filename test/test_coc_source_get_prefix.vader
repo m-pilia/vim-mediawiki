@@ -28,7 +28,7 @@ After:
   unlet! b:vim_mediawiki_site
 
 
-Execute(Test s:get_prefix for wikilink):
+Execute(Test s:get_prefix() for wikilink):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar [[Some text and more]] after',
@@ -40,7 +40,7 @@ Execute(Test s:get_prefix for wikilink):
   \ Function(options)
 
 
-Execute(Test s:get_prefix for file):
+Execute(Test s:get_prefix() for file):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar [[File:Some text and more]] after',
@@ -52,7 +52,7 @@ Execute(Test s:get_prefix for file):
   \ Function(options)
 
 
-Execute(Test s:get_prefix before wikilink):
+Execute(Test s:get_prefix() before wikilink):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar [[File:Some text and more]] after',
@@ -64,7 +64,7 @@ Execute(Test s:get_prefix before wikilink):
   \ Function(options)
 
 
-Execute(Test s:get_prefix after wikilink):
+Execute(Test s:get_prefix() after wikilink):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar [[File:Some text and more]] after',
@@ -76,7 +76,7 @@ Execute(Test s:get_prefix after wikilink):
   \ Function(options)
 
 
-Execute(Test s:get_prefix for template):
+Execute(Test s:get_prefix() for template):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar {{Some text and more}} after',
@@ -88,7 +88,7 @@ Execute(Test s:get_prefix for template):
   \ Function(options)
 
 
-Execute(Test s:get_prefix for template argument):
+Execute(Test s:get_prefix() for template argument):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar {{{Some text and more}}} after',
@@ -100,7 +100,7 @@ Execute(Test s:get_prefix for template argument):
   \ Function(options)
 
 
-Execute(Test s:get_prefix for magic word):
+Execute(Test s:get_prefix() for magic word):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar {{#Some text and more}} after',

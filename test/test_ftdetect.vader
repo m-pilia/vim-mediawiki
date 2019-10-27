@@ -1,0 +1,30 @@
+Before:
+  let g:vim_mediawiki_ignored_wikilangs = []
+  let g:vim_mediawiki_preloaded_wikilangs = []
+  let g:vim_mediawiki_wikilang_map = {}
+
+
+After:
+  unlet! g:vim_mediawiki_wikilang_map
+  unlet! g:vim_mediawiki_ignored_wikilangs
+  unlet! g:vim_mediawiki_preloaded_wikilangs
+
+  bufdo bd
+
+
+Execute(Test ftdetect for *.mediawiki extension):
+  edit foo.mediawiki
+
+  AssertEqual 'mediawiki', &filetype
+
+
+Execute(Test ftdetect for *.mw extension):
+  edit foo.mw
+
+  AssertEqual 'mediawiki', &filetype
+
+
+Execute(Test ftdetect for *.wiki extension):
+  edit foo.wiki
+
+  AssertEqual 'mediawiki', &filetype

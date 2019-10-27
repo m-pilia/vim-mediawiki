@@ -1,8 +1,13 @@
 Before:
+  unlet! g:vim_mediawiki_completion_namespaces
   unlet! g:vim_mediawiki_plugin_loaded
 
 
 Execute(Test plugin loading):
+  let g:vim_mediawiki_completion_namespaces = {
+  \ 'some_key': 'some_value'
+  \ }
+
   " Test loading
   source plugin/mediawiki.vim
 
@@ -14,6 +19,7 @@ Execute(Test plugin loading):
   AssertEqual 1, g:vim_mediawiki_plugin_loaded
 
   AssertEqual {
+    \ 'some_key': 'some_value',
     \ 'default': {
     \       '[[': 0,
     \       '{{': 10,
@@ -25,3 +31,7 @@ Execute(Test plugin loading):
   AssertEqual 'en.wikipedia.org', g:vim_mediawiki_site
   AssertEqual 5, g:vim_mediawiki_completion_prefix_length
   AssertEqual 15, g:vim_mediawiki_completion_limit
+  AssertEqual 0, g:vim_mediawiki_mappings
+  AssertEqual [], g:vim_mediawiki_ignored_wikilangs
+  AssertEqual [], g:vim_mediawiki_preloaded_wikilangs
+  AssertEqual {}, g:vim_mediawiki_wikilang_map
