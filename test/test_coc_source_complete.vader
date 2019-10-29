@@ -10,6 +10,12 @@ Before:
   \   },
   \ }
 
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar [[Some text and more]] after',
+  \ 'colnr': 20,
+  \ }
+
   let mock = NewFunctionMock()
 
 
@@ -28,12 +34,6 @@ After:
 
 " Use a mock of the Python interpreter that echoes all its arguments
 Execute(Test coc#source#mediawiki#complete()):
-  let options = {
-  \ 'bufnr': bufnr(''),
-  \ 'line': 'foo bar [[Some text and more]] after',
-  \ 'colnr': 20,
-  \ }
-
   let expected_command = join([
   \   '/testplugin/scripts/list_pages.py',
   \   '--site', g:vim_mediawiki_site,
@@ -48,4 +48,16 @@ Execute(Test coc#source#mediawiki#complete()):
   AssertEqual 1, len(mock.args[0])
   AssertEqual
   \ [{'word': expected_command, 'menu': expected_command}],
+  \ mock.args[0][0]
+
+
+Execute(Test coc#source#mediawiki#complete() with no site set):
+  let g:vim_mediawiki_site = ''
+
+  call coc#source#mediawiki#complete(options, mock.function)
+  sleep 500m
+
+  AssertEqual 1, len(mock.args[0])
+  AssertEqual
+  \ v:false,
   \ mock.args[0][0]

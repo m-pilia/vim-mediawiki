@@ -22,16 +22,18 @@ Execute(Test plugin loading):
     \ 'some_key': 'some_value',
     \ 'default': {
     \       '[[': 0,
-    \       '{{': 10,
-    \       '[[File:': 6,
-    \       '[[Category:': 14,
     \   },
     \ },
     \ g:vim_mediawiki_completion_namespaces
-  AssertEqual 'en.wikipedia.org', g:vim_mediawiki_site
+  AssertEqual '', g:vim_mediawiki_site
   AssertEqual 5, g:vim_mediawiki_completion_prefix_length
-  AssertEqual 15, g:vim_mediawiki_completion_limit
+  AssertEqual 50, g:vim_mediawiki_completion_limit
   AssertEqual 0, g:vim_mediawiki_mappings
   AssertEqual [], g:vim_mediawiki_ignored_wikilangs
   AssertEqual [], g:vim_mediawiki_preloaded_wikilangs
   AssertEqual {}, g:vim_mediawiki_wikilang_map
+  AssertEqual 1, g:vim_mediawiki_surround
+  AssertEqual 'l', g:vim_mediawiki_surround_wikilink
+  AssertEqual 't', g:vim_mediawiki_surround_template
+  AssertEqual 'b', g:vim_mediawiki_surround_bold
+  AssertEqual 'i', g:vim_mediawiki_surround_italic

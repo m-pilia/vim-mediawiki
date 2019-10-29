@@ -10,6 +10,8 @@ provides:
 * syntax highlighting
 * auto-completion of links and templates with a
   [coc.nvim](https://github.com/neoclide/coc.nvim) source
+* `<plug>` mappings for text objects
+* integration with [vim-surround](https://github.com/tpope/vim-surround)
 
 Installation
 ============
@@ -47,6 +49,8 @@ to configure the source in coc.nvim. Settings can be defined in the
     }
 }
 ```
+To further configure completion, see the [following
+section](#Completion).
 
 If you do not use coc.nvim, you may be able to use the function
 `coc#source#mediawiki#complete()` to implement an
@@ -56,6 +60,33 @@ adapter to plug it in other completion mechanisms. Please refer to the
 API](https://github.com/neoclide/coc.nvim/wiki/Create-custom-source) used by
 this source.
 
+Text objects
+============
+
+The plugin provides text objects `<plug>(mediawiki-text-object-inside-tick)`
+and `<plug>(mediawiki-text-object-around-tick)` to operate inside or around
+italic and bold markers, and `<plug>(mediawiki-text-object-inside-heading)` and
+`<plug>(mediawiki-text-object-around-heading)` to operate inside or around
+headings respectively.
+
+Surround
+========
+
+If [vim-surround](https://github.com/tpope/vim-surround) is installed, mappings
+are created to surround text with wiki-link or template double-brackets, or
+with bold or italic ticks. The characters bound to the surround map can be
+configured with the variables
+```viml
+let g:vim_mediawiki_surround_wikilink = 'l'
+let g:vim_mediawiki_surround_template = 't'
+let g:vim_mediawiki_surround_bold = 'b'
+let g:vim_mediawiki_surround_italic = 'i'
+```
+and can be disabled by settings
+```viml
+let g:vim_mediawiki_surround = 0
+```
+
 Configuration
 =============
 
@@ -63,11 +94,16 @@ A set of variables allows to customise the behaviour of the plugin. All
 variables can either be set globally as `g:vim_mediawiki_...` or locally for
 each buffer with `b:vim_mediawiki_...`.
 
+## Site
+
 The value of `g:vim_mediawiki_site` sets the address of the wiki to edit.
-Default:
+The default is an empty string, and you need to set this in order to use
+features such as auto-completion. Example:
 ```viml
 let g:vim_mediawiki_site = 'en.wikipedia.org'
 ```
+
+## Completion
 
 It is possible to customise which
 [namespaces](https://www.mediawiki.org/wiki/Help:Namespaces) to auto-complete.
@@ -78,11 +114,11 @@ each trigger sequence to the number of the corresponding namespace on that
 site. Example:
 ```viml
 let g:vim_mediawiki_completion_namespaces = {
-\ 'en.wikipedia.org': {
+\   'en.wikipedia.org': {
 \       '[[': 0,
 \       '{{': 10,
 \   },
-\ 'sv.wikipedia.org': {
+\   'sv.wikipedia.org': {
 \       '[[': 0,
 \       '[[File:': 6,
 \       '[[Kategori:': 14,
@@ -93,11 +129,8 @@ Only the namespaces listed in this map will be completed. A `default` entry is
 used for sites not present among the keys. The pre-defined configuration is
 ```viml
 let g:vim_mediawiki_completion_namespaces = {
-\ 'default': {
+\   'default': {
 \       '[[': 0,
-\       '{{': 10,
-\       '[[File:': 6,
-\       '[[Category:': 14,
 \   },
 \ }
 ```
@@ -107,6 +140,44 @@ merged with the global configuration, so it is not necessary to duplicate the
 whole configuration in buffer-local variables, but it is sufficient to add or
 overwrite only the desired sites. To disable completion for a site, map it to
 an empty dictionary.
+
+A complete configuration to edit the English language Wikipedia
+[would be](https://en.wikipedia.org/wiki/Wikipedia:Namespace):
+```viml
+let g:vim_mediawiki_completion_namespaces = {
+\   'en.wikipedia.org': {
+\       '[[': 0,
+\       '[[Talk:': 1,
+\       '[[User:': 2,
+\       '[[User talk:': 3,
+\       '[[Wikipedia:': 4,
+\       '[[Wikipedia talk:': 5,
+\       '[[File:': 6,
+\       '[[:File:': 6,
+\       '[[File talk:': 7,
+\       '[[MediaWiki:': 8,
+\       '[[MediaWiki talk:': 9,
+\       '[[Template:': 10,
+\       '{{': 10,
+\       '[[Template talk:': 11,
+\       '[[Help:': 12,
+\       '[[Help talk:': 13,
+\       '[[Category:': 14,
+\       '[[:Category:': 14,
+\       '[[Category talk:': 15,
+\       '[[Portal:': 100,
+\       '[[Portal talk:': 101,
+\       '[[Book:': 108,
+\       '[[Book talk:': 109,
+\       '[[Draft:': 118,
+\       '[[Draft talk:': 119,
+\       '[[TimedText:': 710,
+\       '[[TimedText talk:': 711,
+\       '[[Module:': 828,
+\       '[[Module talk:': 829,
+\   },
+\ }
+```
 
 The value of `g:vim_mediawiki_completion_prefix_length` determines the minimum
 number of characters required after the trigger sequence to trigger completion.
@@ -120,6 +191,8 @@ fetched. Default:
 ```viml
 let g:vim_mediawiki_completion_limit = 15
 ```
+
+## Mappings
 
 No mappings are set out-of-the-box. The following optional navigation mappings
 ```viml
@@ -136,6 +209,8 @@ can be enabled by setting to true the variable
 ```viml
 let g:vim_mediawiki_mappings = 1
 ```
+
+## Syntax highlighting
 
 Languages within `<source>` or `<syntaxhighlight>` tags will be highlighted. A
 list of languages (identified by their wiki name) to be ignored can be set:
