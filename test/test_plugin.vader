@@ -32,3 +32,8 @@ Execute(Test plugin loading):
   AssertEqual [], g:vim_mediawiki_ignored_wikilangs
   AssertEqual [], g:vim_mediawiki_preloaded_wikilangs
   AssertEqual {}, g:vim_mediawiki_wikilang_map
+  AssertEqual 1, g:vim_mediawiki_surround
+  AssertEqual 'l', g:vim_mediawiki_surround_wikilink
+  AssertEqual 't', g:vim_mediawiki_surround_template
+  AssertEqual 'b', g:vim_mediawiki_surround_bold
+  AssertEqual 'i', g:vim_mediawiki_surround_italic

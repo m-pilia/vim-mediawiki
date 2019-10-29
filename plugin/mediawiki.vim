@@ -44,6 +44,26 @@ if !exists('g:vim_mediawiki_wikilang_map')
     let g:vim_mediawiki_wikilang_map = {}
 endif
 
+if !exists('g:vim_mediawiki_surround')
+    let g:vim_mediawiki_surround = 1
+endif
+
+if !exists('g:vim_mediawiki_surround_wikilink')
+    let g:vim_mediawiki_surround_wikilink = 'l'
+endif
+
+if !exists('g:vim_mediawiki_surround_template')
+    let g:vim_mediawiki_surround_template = 't'
+endif
+
+if !exists('g:vim_mediawiki_surround_bold')
+    let g:vim_mediawiki_surround_bold = 'b'
+endif
+
+if !exists('g:vim_mediawiki_surround_italic')
+    let g:vim_mediawiki_surround_italic = 'i'
+endif
+
 augroup vim_media_wiki
     autocmd!
     autocmd Syntax mediawiki call mediawiki#fenced_languages#perform_highlighting()

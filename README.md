@@ -10,6 +10,8 @@ provides:
 * syntax highlighting
 * auto-completion of links and templates with a
   [coc.nvim](https://github.com/neoclide/coc.nvim) source
+* `<plug>` mappings for text objects
+* integration with [vim-surround](https://github.com/tpope/vim-surround)
 
 Installation
 ============
@@ -57,6 +59,33 @@ adapter to plug it in other completion mechanisms. Please refer to the
 [upstream documentation of the
 API](https://github.com/neoclide/coc.nvim/wiki/Create-custom-source) used by
 this source.
+
+Text objects
+============
+
+The plugin provides text objects `<plug>(mediawiki-text-object-inside-tick)`
+and `<plug>(mediawiki-text-object-around-tick)` to operate inside or around
+italic and bold markers, and `<plug>(mediawiki-text-object-inside-heading)` and
+`<plug>(mediawiki-text-object-around-heading)` to operate inside or around
+headings respectively.
+
+Surround
+========
+
+If [vim-surround](https://github.com/tpope/vim-surround) is installed, mappings
+are created to surround text with wiki-link or template double-brackets, or
+with bold or italic ticks. The characters bound to the surround map can be
+configured with the variables
+```viml
+let g:vim_mediawiki_surround_wikilink = 'l'
+let g:vim_mediawiki_surround_template = 't'
+let g:vim_mediawiki_surround_bold = 'b'
+let g:vim_mediawiki_surround_italic = 'i'
+```
+and can be disabled by settings
+```viml
+let g:vim_mediawiki_surround = 0
+```
 
 Configuration
 =============

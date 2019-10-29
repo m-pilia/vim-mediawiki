@@ -1,15 +1,29 @@
 Before:
+  unlet! b:did_ftplugin
   let g:vim_mediawiki_mappings = 0
 
 
 After:
   unlet! b:did_ftplugin
+  unlet! g:loaded_surround
   unlet! g:vim_mediawiki_mappings
+  unlet! g:vim_mediawiki_surround
+  unlet! b:vim_mediawiki_surround_wikilink
+  unlet! b:vim_mediawiki_surround_template
+  unlet! b:vim_mediawiki_surround_bold
+  unlet! b:vim_mediawiki_surround_italic
   mapclear
 
 
 Execute(Test settings):
   runtime macros/matchit.vim
+  let g:loaded_surround = 1
+
+  let g:vim_mediawiki_surround = 1
+  let b:vim_mediawiki_surround_wikilink = 'a'
+  let b:vim_mediawiki_surround_template = 'b'
+  let b:vim_mediawiki_surround_bold = 'c'
+  let b:vim_mediawiki_surround_italic = 'd'
 
   runtime ftplugin/mediawiki.vim
 
@@ -28,6 +42,10 @@ Execute(Test settings):
   AssertEqual 1, &wrap
   AssertEqual 1, &linebreak
   AssertEqual 0, &textwidth
+  AssertEqual "[[\r|]]", b:surround_{char2nr('a')}
+  AssertEqual "{{\r}}", b:surround_{char2nr('b')}
+  AssertEqual "'''\r'''", b:surround_{char2nr('c')}
+  AssertEqual "''\r''", b:surround_{char2nr('d')}
 
 
 Execute(Test double load):
@@ -67,3 +85,75 @@ Execute(Test mappings):
   AssertMapping 'nmap', 'D', 'dg$'
   AssertMapping 'nmap', 'C', 'cg$'
   AssertMapping 'nmap', 'A', 'g$a'
+
+
+Given(Text with bold/italic delimiters):
+  Some text.
+  This is an '''example''' of text.
+  Some more text.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> i' <plug>(mediawiki-text-object-inside-tick)
+  omap <buffer> i' <plug>(mediawiki-text-object-inside-tick)
+Do(Delete using text object for inside bold/italic):
+  2gg
+  18|
+  di'
+Expect(Text inside delimiters is removed):
+  Some text.
+  This is an '''''' of text.
+  Some more text.
+
+
+Given(Text with bold/italic delimiters):
+  Some text.
+  This is an '''example''' of text.
+  Some more text.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> a' <plug>(mediawiki-text-object-around-tick)
+  omap <buffer> a' <plug>(mediawiki-text-object-around-tick)
+Do(Delete using text object for around bold/italic):
+  2gg
+  18|
+  da'
+Expect(Text around delimiters is removed):
+  Some text.
+  This is an  of text.
+  Some more text.
+
+
+Given(Text with heading delimiters):
+  Example text.
+  Some== Example heading ==
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> ih <plug>(mediawiki-text-object-inside-heading)
+  omap <buffer> ih <plug>(mediawiki-text-object-inside-heading)
+Do(Delete using text object for inside heading):
+  2gg
+  15|
+  dih
+Expect(Text inside delimiters is removed):
+  Example text.
+  Some====
+  Example paragraph.
+
+
+Given(Text with heading delimiters):
+  Example text.
+  Some== Example heading ==
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> ah <plug>(mediawiki-text-object-around-heading)
+  omap <buffer> ah <plug>(mediawiki-text-object-around-heading)
+Do(Delete using text object for around heading):
+  2gg
+  15|
+  dah
+Expect(Text around delimiters is removed):
+  Example text.
+  Some
+  Example paragraph.

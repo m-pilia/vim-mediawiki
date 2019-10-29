@@ -53,5 +53,25 @@ if mediawiki#get_var(bufnr(''), 'mappings')
     nnoremap <buffer> A g$a
 endif
 
+" Settings for vim-surround: https://github.com/tpope/vim-surround
+if exists('g:loaded_surround') && mediawiki#get_var(bufnr(''), 'surround')
+    let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_wikilink'))} = "[[\r|]]"
+    let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_template'))} = "{{\r}}"
+    let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_bold'))} = "'''\r'''"
+    let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_italic'))} = "''\r''"
+endif
+
+" Text objects for section headings
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-heading) :<C-U>silent! normal! T=vt=<CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-heading) :<C-U>call mediawiki#text_object('\v(\=+)@<=\=(\=)@!')<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-heading) :normal vih<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-heading) :normal vah<CR>
+
+" Text objects for bold and italic
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-tick) :<C-U>silent! normal! T'vt'<CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :<C-U>call mediawiki#text_object("\\v(\\'+)@<=\\'(\\')@!")<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-tick) :normal vi'<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :normal va'<CR>
+
 let &cpoptions = s:keepcpo
 unlet! s:keepcpo

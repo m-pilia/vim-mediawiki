@@ -8,6 +8,7 @@ CONTENTS                                              *vim-mediawiki-contents*
     Installation..................|vim-mediawiki-installation|
     Auto-completion...............|vim-mediawiki-auto-completion|
     Options.......................|vim-mediawiki-options|
+    Text objects..................|vim-mediawiki-text-objects|
     Mappings......................|vim-mediawiki-mappings|
     License.......................|vim-mediawiki-license|
 
@@ -180,6 +181,72 @@ g:vim_mediawiki_site                                    *g:vim_mediawiki_site*
 <
 
 
+g:vim_mediawiki_surround                            *g:vim_mediawiki_surround*
+                                                    *b:vim_mediawiki_surround*
+    Type: |number|
+    Default: '1'
+
+    Enable mappings for vim-surround (https://github.com/tpope/vim-surround).
+
+    Example:
+>
+    let g:vim_mediawiki_surround = 0
+<
+
+
+g:vim_mediawiki_surround_bold                  *g:vim_mediawiki_surround_bold*
+                                               *b:vim_mediawiki_surround_bold*
+    Type: |string|
+    Default: 'b'
+
+    Character mapped to surround with bold markers.
+
+    Example:
+>
+    let g:vim_mediawiki_surround_bold = 'b'
+<
+
+
+g:vim_mediawiki_surround_italic              *g:vim_mediawiki_surround_italic*
+                                             *b:vim_mediawiki_surround_italic*
+    Type: |string|
+    Default: 'b'
+
+    Character mapped to surround with italic markers.
+
+    Example:
+>
+    let g:vim_mediawiki_surround_italic = 'i'
+<
+
+
+g:vim_mediawiki_surround_template          *g:vim_mediawiki_surround_template*
+                                           *b:vim_mediawiki_surround_template*
+    Type: |string|
+    Default: 't'
+
+    Character mapped to surround with template double-braces.
+
+    Example:
+>
+    let g:vim_mediawiki_surround_template = 't'
+<
+
+
+g:vim_mediawiki_surround_wikilink          *g:vim_mediawiki_surround_wikilink*
+                                           *b:vim_mediawiki_surround_wikilink*
+    Type: |string|
+    Default: 'l'
+
+    Character mapped to surround with wiki-link markers (double square
+    brackets).
+
+    Example:
+>
+    let g:vim_mediawiki_surround_wikilink = 'l'
+<
+
+
 g:vim_mediawiki_wikilang_map                    *g:vim_mediawiki_wikilang_map*
                                                 *b:vim_mediawiki_wikilang_map*
     Type: |list|
@@ -195,10 +262,20 @@ g:vim_mediawiki_wikilang_map                    *g:vim_mediawiki_wikilang_map*
 
 
 ==============================================================================
+TEXT OBJECTS                                      *vim-mediawiki-text-objects*
+
+The plugin exposes the text objects `<plug>(mediawiki-text-object-inside-tick)`
+and `<plug>(mediawiki-text-object-around-tick)` to operate inside or around
+italic and bold markers, and `<plug>(mediawiki-text-object-inside-heading)` and
+`<plug>(mediawiki-text-object-around-heading)` to operate inside or around
+headings respectively.
+
+
+==============================================================================
 MAPPINGS                                              *vim-mediawiki-mappings*
 
-No mappings are set out-of-the-box. The following optional mappings can
-be enabled with |g:vim_mediawiki_mappings|:
+No mappings are set out-of-the-box. The following optional
+mappings can be enabled with |g:vim_mediawiki_mappings|:
 
     nnoremap <buffer> k gk
     nnoremap <buffer> j gj
