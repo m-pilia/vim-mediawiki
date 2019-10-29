@@ -135,12 +135,14 @@ endfunction
 function! s:define_region(filetype, group_name, wiki_lang) abort
     " <source> tag
     exe 'syntax region wiki_' . a:filetype . '_region ' .
+    \   'matchgroup=htmlTag '
     \   "start='<source lang=\"" . a:wiki_lang . "\">' " .
     \   "end='</source>' ".
     \   'keepend contains=wikiSourceTag,wikiSourceEndTag,@' . a:group_name
 
     " <syntaxhighlight> tag
     exe 'syntax region wiki_' . a:filetype . '_region ' .
+    \   'matchgroup=htmlTag '
     \   "start='<syntaxhighlight lang=\"" . a:wiki_lang . "\">' " .
     \   "end='</syntaxhighlight>' ".
     \   'keepend contains=wikiSyntaxHLTag,wikiSyntaxHLEndTag,@' . a:group_name

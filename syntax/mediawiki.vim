@@ -8,6 +8,8 @@
 "
 " Credits: [[User:Aepd87]], [[User:Danny373]], [[User:Ingo Karkat]], et al.
 
+scriptencoding utf-8
+
 if exists('b:current_syntax')
     finish
 endif
@@ -30,7 +32,7 @@ syntax keyword htmlTagName contained sup table td th tr tt ul var
 syntax match   htmlTagName contained "\<\(b\|i\|u\|h[1-6]\|em\|strong\)\>"
 
 " Allowed Wiki tag names
-syntax keyword htmlTagName contained math nowiki references source syntaxhighlight
+syntax keyword htmlTagName contained math nowiki ref references source syntaxhighlight
 
 " Allowed arg names
 syntax clear htmlArg
@@ -71,9 +73,8 @@ syntax include @TeX syntax/tex.vim
 unlet! b:current_syntax
 
 syntax region wikiTeX matchgroup=htmlTag start="<math>" end="<\/math>"  contains=@texMathZoneGroup,wikiNowiki,wikiNowikiEndTag
-syntax region wikiRef matchgroup=htmlTag start="<ref>"  end="<\/ref>"   contains=wikiNowiki,wikiNowikiEndTag
 
-syntax cluster wikiText contains=wikiLink,wikiTemplate,wikiNowiki,wikiNowikiEndTag,wikiItalic,wikiBold,wikiBoldAndItalic
+syntax cluster wikiText contains=wikiExternalLink,wikiLink,wikiTemplate,wikiNowiki,wikiNowikiEndTag,wikiItalic,wikiBold,wikiBoldAndItalic
 
 " Tables
 syntax cluster wikiTableFormat contains=wikiTemplate,htmlString,htmlArg,htmlValue
@@ -95,7 +96,7 @@ syntax match  wikiTableHeaderLine /\(^{|\)\@<=.*$/ contained contains=@wikiTable
 syntax match  wikiTableCaptionLine /^|+.*$/ contained contains=wikiTableSeparator,@wikiText
 syntax match  wikiTableNewRow /^|-.*$/ contained contains=wikiTableSeparator,@wikiTableFormat
 
-syntax cluster wikiTop contains=@Spell,wikiLink,wikiNowiki,wikiNowikiEndTag
+syntax cluster wikiTop contains=@Spell,wikiExternalLink,wikiLink,wikiNowiki,wikiNowikiEndTag
 
 syntax region wikiItalic        start=+'\@<!'''\@!+ end=+''+    oneline contains=@wikiTop,wikiItalicBold
 syntax region wikiBold          start=+'''+         end=+'''+   oneline contains=@wikiTop,wikiBoldItalic
@@ -111,52 +112,72 @@ syntax region wikiH4 start="^===="   end="===="   oneline contains=@wikiTop
 syntax region wikiH5 start="^====="  end="====="  oneline contains=@wikiTop
 syntax region wikiH6 start="^======" end="======" oneline contains=@wikiTop
 
-syntax region wikiLink start="\[\[" end="\]\]\(s\|'s\|es\|ing\|\)" oneline contains=wikiLink,wikiNowiki,wikiNowikiEndTag
+syntax region wikiLink start="\[\[" end="\v\]\].{-}([\[\],.;:#{}'`!"£$%&/()=?^|\\–—[:space:]]|$)@=" keepend oneline transparent contains=wikiLinkBracket,wikiLinkSuffix
+syntax region wikiLinkBracket matchgroup=wikiLinkDelimiter start="\[\[" end="\]\]" keepend oneline contained contains=wikiLinkPage,wikiLinkDelimiter,wikiLinkName
+syntax match wikiLinkPage /\v[^|]+(\|)@=/ contained
+syntax match wikiLinkDelimiter /\V|/ contained nextgroup=wikiLinkName
+syntax match wikiLinkName /\v(\|)@<=.*/ contained contains=wikiExternalLink,wikiLink,wikiNowiki,wikiNowikiEndTag
+syntax match wikiLinkSuffix /\v[^\[].*/ contained
 
-syntax region wikiLink start="https\?://" end="\W*\_s"me=s-1 oneline
-syntax region wikiLink start="\[http:"   end="\]" oneline contains=wikiNowiki,wikiNowikiEndTag
-syntax region wikiLink start="\[https:"  end="\]" oneline contains=wikiNowiki,wikiNowikiEndTag
-syntax region wikiLink start="\[ftp:"    end="\]" oneline contains=wikiNowiki,wikiNowikiEndTag
-syntax region wikiLink start="\[gopher:" end="\]" oneline contains=wikiNowiki,wikiNowikiEndTag
-syntax region wikiLink start="\[news:"   end="\]" oneline contains=wikiNowiki,wikiNowikiEndTag
-syntax region wikiLink start="\[mailto:" end="\]" oneline contains=wikiNowiki,wikiNowikiEndTag
+syntax match wikiExternalLink "\vhttps?\:\/\/[^[:space:]]*(\_s)@="
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(http:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(https:\)\@="  end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(ftp:\)\@="    end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(gopher:\)\@=" end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(news:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(mailto:\)\@=" end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
+syntax match wikiExternalLinkName '[[:space:]][^\]]*' contained
 
-syntax match  wikiTemplateName /{{[^{|}<>\[\]]\+/hs=s+2 contained
-syntax region wikiTemplate start="{{" end="}}" keepend extend contains=wikiNowiki,wikiNowikiEndTag,wikiTemplateName,wikiTemplateParam,wikiTemplate,wikiLink
+syntax match wikiTemplateName /{{[^{|}<>\[\]]\+/hs=s+2 contained
+syntax match wikiTemplateArgName /\v(\|)@<=[^=]+(\=)@=/ contained
+syntax match wikiTemplateArgVal /\v(\|)@<=[^=|]+(\||$)@=/ contained contains=wikiNowiki,wikiNowikiEndTag,wikiTemplateParam,wikiTemplate,wikiExternalLink,wikiLink
+syntax match wikiTemplateArgVal /\v(\=)@<=[^|]+/ contained contains=wikiNowiki,wikiNowikiEndTag,wikiTemplateParam,wikiTemplate,wikiExternalLink,wikiLink
+syntax match wikiTemplateArgVal /\v^\s*[^|{]+/ contained contains=wikiNowiki,wikiNowikiEndTag,wikiTemplateParam,wikiTemplate,wikiExternalLink,wikiLink
+syntax region wikiTemplate start="{{" matchgroup=wikiTemplateDelim end="}}" keepend extend contains=wikiTemplateName,wikiTemplateArgName,wikiTemplateArgVal
 syntax region wikiTemplateParam start="{{{\s*\d" end="}}}" extend contains=wikiTemplateName
 
 syntax match wikiParaFormatChar /^[\:|\*|;|#]\+/
 syntax match wikiParaFormatChar /^-----*/
 syntax match wikiPre            /^\ .*$/         contains=wikiNowiki,wikiNowikiEndTag
 
-hi def link wikiItalic        htmlItalic
-hi def link wikiBold          htmlBold
-hi def link wikiBoldItalic    htmlBoldItalic
-hi def link wikiItalicBold    htmlBoldItalic
-hi def link wikiBoldAndItalic htmlBoldItalic
+highlight def wikiLinkText cterm=underline gui=underline
 
-hi def link wikiH1 htmlTitle
-hi def link wikiH2 htmlTitle
-hi def link wikiH3 htmlTitle
-hi def link wikiH4 htmlTitle
-hi def link wikiH5 htmlTitle
-hi def link wikiH6 htmlTitle
+highlight def link wikiItalic        htmlItalic
+highlight def link wikiBold          htmlBold
+highlight def link wikiBoldItalic    htmlBoldItalic
+highlight def link wikiItalicBold    htmlBoldItalic
+highlight def link wikiBoldAndItalic htmlBoldItalic
 
-hi def link wikiLink           htmlLink
-hi def link wikiTemplate       htmlSpecial
-hi def link wikiTemplateParam  htmlSpecial
-hi def link wikiTemplateName   Type
-hi def link wikiParaFormatChar htmlSpecial
-hi def link wikiPre            htmlConstant
-hi def link wikiRef            htmlComment
+highlight def link wikiH1 htmlTitle
+highlight def link wikiH2 htmlTitle
+highlight def link wikiH3 htmlTitle
+highlight def link wikiH4 htmlTitle
+highlight def link wikiH5 htmlTitle
+highlight def link wikiH6 htmlTitle
 
-hi def link htmlPre            wikiPre
-hi def link wikiSource         wikiPre
-hi def link wikiSyntaxHL       wikiPre
+highlight def link wikiLinkDelimiter         Statement
+highlight def link wikiLinkpage              wikiLinkText
+highlight def link wikiLinkName              wikiLinkText
+highlight def link wikiLinkSuffix            wikiLinkText
+highlight def link wikiExternalLink          htmlLink
+highlight def link wikiExternalLinkName      htmlPreProc
+highlight def link wikiExternalLinkDelimiter htmlPreProc
+highlight def link wikiTemplateArgName       Identifier
+highlight def link wikiTemplateArgVal        String
+highlight def link wikiTemplate              Statement
+highlight def link wikiTemplateDelim         Statement
+highlight def link wikiTemplateParam         htmlSpecial
+highlight def link wikiTemplateName          Type
+highlight def link wikiParaFormatChar        htmlSpecial
+highlight def link wikiPre                   htmlConstant
 
-hi def link wikiTableSeparator Statement
-hi def link wikiTableFormatEnd wikiTableSeparator
-hi def link wikiTableHeadingCell htmlBold
+highlight def link htmlPre            wikiPre
+highlight def link wikiSource         wikiPre
+highlight def link wikiSyntaxHL       wikiPre
+
+highlight def link wikiTableSeparator Statement
+highlight def link wikiTableFormatEnd wikiTableSeparator
+highlight def link wikiTableHeadingCell htmlBold
 
 let b:current_syntax = 'mediawiki'
 
