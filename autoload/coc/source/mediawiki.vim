@@ -48,6 +48,9 @@ function! s:handler(prefix, callback, channel, data, stream) abort
     " from the completion text. Leave full page name as 'menu'
     " information in the item.
     let l:namespace_prefix = a:prefix[0] ==# '{{' ? '\[^:]\+:' : a:prefix[0][2:]
+    if l:namespace_prefix[0] ==# ':'
+        let l:namespace_prefix = l:namespace_prefix[1:]
+    endif
     let l:previous_words = join(split(escape(a:prefix[1], '/\'), ' ')[0:-2], ' ')
     let l:pattern = '\c\V\^' . l:namespace_prefix . l:previous_words . '\s\*'
     call map(a:data, {i, v -> {'menu': v, 'word': substitute(v, l:pattern, '', '')}})
@@ -72,14 +75,18 @@ endfunction
 
 " Provide completions by querying the API
 function! coc#source#mediawiki#complete(options, callback) abort
-    let l:items = []
+    let l:site = mediawiki#get_var(a:options.bufnr, 'site')
+
+    if l:site =~# '^\s*$'
+        call a:callback(v:false)
+    endif
 
     let l:prefix = s:get_prefix(a:options)
     let l:namespace = s:get_namespaces(a:options.bufnr)[l:prefix[0]]
 
     let l:command = [
     \   'python', s:script,
-    \   '--site', mediawiki#get_var(a:options.bufnr, 'site'),
+    \   '--site', l:site,
     \   '--prefix', l:prefix[1],
     \   '--namespace', string(l:namespace),
     \   '--limit', string(mediawiki#get_var(a:options.bufnr, 'completion_limit')),

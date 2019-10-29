@@ -51,11 +51,8 @@ g:vim_mediawiki_completion_namespaces  *g:vim_mediawiki_completion_namespaces*
                                        *b:vim_mediawiki_completion_namespaces*
     Type: |dict|
     Default: `{
-    \ 'default': {
+    \   'default': {
     \       '[[': 0,
-    \       '{{': 10,
-    \       '[[File:': 6,
-    \       '[[Category:': 14,
     \   },
     \ }`
 
@@ -65,7 +62,7 @@ g:vim_mediawiki_completion_namespaces  *g:vim_mediawiki_completion_namespaces*
     for sites not present among the keys. The pre-defined configuration is
 >
     let g:vim_mediawiki_completion_namespaces = {
-    \ 'default': {
+    \   'default': {
     \       '[[': 0,
     \       '{{': 10,
     \       '[[File:': 6,
@@ -83,7 +80,7 @@ g:vim_mediawiki_completion_namespaces  *g:vim_mediawiki_completion_namespaces*
     Example:
 >
     let g:vim_mediawiki_completion_namespaces = {
-    \ 'sv.wikipedia.org': {
+    \   'sv.wikipedia.org': {
     \       '[[': 0,
     \       '{{': 10,
     \       '[[File:': 6,
@@ -172,7 +169,7 @@ g:vim_mediawiki_preloaded_wikilangs      *g:vim_mediawiki_preloaded_wikilangs*
 g:vim_mediawiki_site                                    *g:vim_mediawiki_site*
                                                         *b:vim_mediawiki_site*
     Type: |string|
-    Default: `en.wikipedia.org`
+    Default: ''
 
     Address of the wiki to edit.
 

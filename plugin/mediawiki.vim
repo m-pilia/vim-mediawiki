@@ -4,15 +4,12 @@ endif
 let g:vim_mediawiki_plugin_loaded = 1
 
 if !exists('g:vim_mediawiki_site')
-    let g:vim_mediawiki_site = 'en.wikipedia.org'
+    let g:vim_mediawiki_site = ''
 endif
 
 let s:default_namespaces = {
     \ 'default': {
     \       '[[': 0,
-    \       '{{': 10,
-    \       '[[File:': 6,
-    \       '[[Category:': 14,
     \   },
     \ }
 if !exists('g:vim_mediawiki_completion_namespaces')
@@ -28,7 +25,7 @@ if !exists('g:vim_mediawiki_completion_prefix_length')
 endif
 
 if !exists('g:vim_mediawiki_completion_limit')
-    let g:vim_mediawiki_completion_limit = 15
+    let g:vim_mediawiki_completion_limit = 50
 endif
 
 if !exists('g:vim_mediawiki_mappings')
