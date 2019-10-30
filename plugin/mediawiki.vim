@@ -63,9 +63,3 @@ endif
 if !exists('g:vim_mediawiki_surround_italic')
     let g:vim_mediawiki_surround_italic = 'i'
 endif
-
-augroup vim_media_wiki
-    autocmd!
-    autocmd Syntax mediawiki call mediawiki#fenced_languages#perform_highlighting()
-    autocmd BufWritePost * call mediawiki#fenced_languages#perform_highlighting()
-augroup END

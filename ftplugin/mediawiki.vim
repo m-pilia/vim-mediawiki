@@ -73,5 +73,12 @@ vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :<C-U>call 
 omap <silent> <buffer> <plug>(mediawiki-text-object-inside-tick) :normal vi'<CR>
 omap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :normal va'<CR>
 
+" Detect fenced languages (updated on buffer writing)
+call mediawiki#fenced_languages#perform_highlighting()
+augroup vim_media_wiki
+    autocmd! * <buffer>
+    autocmd BufWritePost <buffer> call mediawiki#fenced_languages#perform_highlighting()
+augroup END
+
 let &cpoptions = s:keepcpo
 unlet! s:keepcpo
