@@ -104,3 +104,11 @@ endfunction
 
 command! -nargs=+ AssertMapping :call s:assert_mapping(<args>)
 command! -nargs=+ AssertNoMapping :call s:assert_no_mapping(<args>)
+
+" Unlet all settings variables
+function! ClearSettings()
+    for l:var in filter(uniq(keys(g:) + keys(b:)), {k, v -> v =~# '^vim_mediawiki'})
+        unlet! g:{var}
+        unlet! b:{var}
+    endfor
+endfunction

@@ -8,4 +8,8 @@ exclude_lines =
     '''
     """
     if __name__ == .__main__.:
+    ^\s*#
+    ^\s*\)\s*$
+    ^\s*\]\s*$
+    ^\s*}\s*$
 

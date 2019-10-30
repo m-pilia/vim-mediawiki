@@ -2,11 +2,9 @@ Before:
   let b:script = 'autoload/mediawiki/fenced_languages.vim'
   source test/utils.vim
 
-  syntax clear
+  call ClearSettings()
 
-  unlet! g:vim_mediawiki_preloaded_wikilangs
-  unlet! g:vim_mediawiki_ignored_wikilangs
-  unlet! g:vim_mediawiki_wikilang_map
+  syntax clear
 
 
 After:
@@ -14,10 +12,6 @@ After:
 
   unlet! Function
   unlet! already_included_ft
-
-  unlet! g:vim_mediawiki_preloaded_wikilangs
-  unlet! g:vim_mediawiki_ignored_wikilangs
-  unlet! g:vim_mediawiki_wikilang_map
 
 
 Given(Text with code tags):

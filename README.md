@@ -206,6 +206,18 @@ fetched. Default:
 let g:vim_mediawiki_completion_limit = 15
 ```
 
+## Preview
+
+The command `MediaWikiPreview` generates a preview of the page being edited,
+and loads it in a web browser window. It is possible to customise the command
+used to open the browser, by setting
+```viml
+let g:vim_mediawiki_browser_command = "chromium \r"
+```
+where the carriage return character `\r` will be replaced with the address of
+the page to open (attention should be paid to insert an actual carriage return
+character, and to not escape the backslash).
+
 ## Mappings
 
 No mappings are set out-of-the-box. The following optional navigation mappings

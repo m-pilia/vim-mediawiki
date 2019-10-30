@@ -1,0 +1,82 @@
+Before:
+  source test/utils.vim
+
+  call ClearSettings()
+  call delete('python_output')
+  call delete('browser_output')
+
+  let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_skins = {'default': 'vector'}
+  let g:vim_mediawiki_browser_command = "./test/browser \r"
+
+  let g:vim_mediawiki_ignored_wikilangs = []
+  let g:vim_mediawiki_preloaded_wikilangs = []
+  let g:vim_mediawiki_wikilang_map = {}
+  let g:vim_mediawiki_mappings = 0
+  let g:vim_mediawiki_surround = 0
+
+  set filetype=mediawiki
+  messages clear
+
+
+After:
+  set filetype=
+
+  unlet! expected_py_cmd
+  unlet! resulting_py_cmd
+  unlet! resulting_browser_cmd
+
+
+" Use a mock of the Python interpreter that echoes all its arguments
+Execute(Test mediawiki#preview()):
+  let expected_py_cmd = '\V'.  join([
+  \   '/testplugin/scripts/preview.py',
+  \   '--site', g:vim_mediawiki_site,
+  \   '--wikitext-file', '\S\+',
+  \   '--skin', mediawiki#get_site_var(bufnr(''), 'skins'),
+  \   '--output-file', '\S\+',
+  \   ], ' ')
+
+  call mediawiki#preview()
+  sleep 500m
+
+  let resulting_py_cmd = join(readfile('python_output'), '\n')
+  let resulting_browser_cmd = join(readfile('browser_output'), '\n')
+
+  Assert
+  \ resulting_py_cmd =~# expected_py_cmd,
+  \ 'Command "' . resulting_py_cmd . '" does not match "' . expected_py_cmd . '""'
+
+  Assert
+  \ len(resulting_browser_cmd) > 0,
+  \ 'Browser command not correctly called'
+
+
+Execute(Test mediawiki#preview() with wrong filetype):
+  set filetype=c
+
+  call mediawiki#preview()
+  sleep 500m
+
+  Assert
+  \ !filereadable('python_output'),
+  \ 'Preview triggered on wrong file type'
+
+  AssertEqual
+  \ 'vim-mediawiki: not a mediawiki buffer',
+  \ GetMessages()[-1]
+
+
+Execute(Test mediawiki#preview() with g:vim_mediawiki_site not set):
+  let g:vim_mediawiki_site = ''
+
+  call mediawiki#preview()
+  sleep 500m
+
+  Assert
+  \ !filereadable('python_output'),
+  \ 'Preview triggered on wrong file type'
+
+  AssertEqual
+  \ 'vim-mediawiki: g:vim_mediawiki_site is not set',
+  \ GetMessages()[-1]

@@ -1,5 +1,10 @@
 Before:
+  source test/utils.vim
+
+  call ClearSettings()
+
   let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_completion_prefix_length = 5
   let g:vim_mediawiki_completion_limit = 5
   let g:vim_mediawiki_completion_namespaces = {
   \ 'default': {
@@ -20,13 +25,6 @@ Before:
 
 
 After:
-  unlet! g:vim_mediawiki_completion_namespaces
-  unlet! b:vim_mediawiki_completion_namespaces
-  unlet! g:vim_mediawiki_completion_limit
-  unlet! b:vim_mediawiki_completion_limit
-  unlet! g:vim_mediawiki_site
-  unlet! b:vim_mediawiki_site
-
   unlet! mock
   unlet! options
   unlet! expected_command

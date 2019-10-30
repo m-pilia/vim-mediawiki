@@ -1,7 +1,9 @@
 Before:
+  source test/utils.vim
   function! Cleanup() abort
     syntax clear
     unlet! b:current_syntax
+    call ClearSettings()
   endfunction
 
   call Cleanup()

@@ -17,7 +17,7 @@ docker images -q "${docker_image}" | grep "^${docker_image_id}" > /dev/null \
     || docker pull "${docker_image}"
 
 vim_binaries=$(docker run --rm "${docker_image}" ls /vim-build/bin \
-             | grep -E '^(neo)?vim' )
+             | grep -E '^(neo)?vim-v(8\.1|0)' )
 
 set +e
 exit_status=0
