@@ -69,6 +69,19 @@ italic and bold markers, and `<plug>(mediawiki-text-object-inside-heading)` and
 `<plug>(mediawiki-text-object-around-heading)` to operate inside or around
 headings respectively.
 
+The `<plug>` mappings can be associated to some key mappings, for instance:
+```viml
+vmap <silent> <buffer> i' <plug>(mediawiki-text-object-inside-tick)
+vmap <silent> <buffer> a' <plug>(mediawiki-text-object-around-tick)
+omap <silent> <buffer> i' <plug>(mediawiki-text-object-inside-tick)
+omap <silent> <buffer> a' <plug>(mediawiki-text-object-around-tick)
+
+vmap <silent> <buffer> ih <plug>(mediawiki-text-object-inside-heading)
+vmap <silent> <buffer> ah <plug>(mediawiki-text-object-around-heading)
+omap <silent> <buffer> ih <plug>(mediawiki-text-object-inside-heading)
+omap <silent> <buffer> ah <plug>(mediawiki-text-object-around-heading)
+```
+
 Surround
 ========
 
@@ -82,7 +95,7 @@ let g:vim_mediawiki_surround_template = 't'
 let g:vim_mediawiki_surround_bold = 'b'
 let g:vim_mediawiki_surround_italic = 'i'
 ```
-and can be disabled by settings
+and can be disabled by setting
 ```viml
 let g:vim_mediawiki_surround = 0
 ```
