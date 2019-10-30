@@ -72,7 +72,11 @@ syntax region wikiSyntaxHL start="<syntaxhighlight\s\+[^>]\+>" keepend end="<\/s
 syntax include @TeX syntax/tex.vim
 unlet! b:current_syntax
 
-syntax region wikiTeX matchgroup=htmlTag start="<math>" end="<\/math>"  contains=@texMathZoneGroup,wikiNowiki,wikiNowikiEndTag
+" See comments to function in s:define_regions()
+" defined in autoload/mediawiki/fenced_languages.vim
+syntax region wikiMath start="<math>" end="<\/math>" keepend contains=htmlTag,htmlEndTag,wikiNowiki,wikiNowikiEndTag,wikiTeX
+syntax region wikiTeX start=/\v(\<math\>)@<=/ end=/\v(\<\/math\>)@=/ keepend contained contains=@texMathZoneGroup
+syntax region wikiTeX start=/\v^(.(\<math\>)@<!)*$/ end=/\v(\<\/math\>)@=/ nextgroup=htmlEndTag keepend contained contains=@texMathZoneGroup
 
 syntax cluster wikiText contains=wikiExternalLink,wikiLink,wikiTemplate,wikiNowiki,wikiNowikiEndTag,wikiItalic,wikiBold,wikiBoldAndItalic
 

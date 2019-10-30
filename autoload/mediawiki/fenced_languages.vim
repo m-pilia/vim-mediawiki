@@ -132,20 +132,44 @@ function! s:include_syntax(filetype, group_name) abort
 endfunction
 
 " Define the highlighted region. Must be called after IncludeSyntax()
-function! s:define_region(filetype, group_name, wiki_lang) abort
-    " <source> tag
-    exe 'syntax region wiki_' . a:filetype . '_region ' .
-    \   'matchgroup=htmlTag '
-    \   "start='<source lang=\"" . a:wiki_lang . "\">' " .
-    \   "end='</source>' ".
-    \   'keepend contains=wikiSourceTag,wikiSourceEndTag,@' . a:group_name
+"
+" Due to a limitation in syntax region matching, a match cannot start on
+" a new line after a lookbehind. Therefore use two nested regions, an
+" outer one containing the tags and the code, and an inner one
+" containing the code only. Two definitions of the inner region, one
+" covering inline tags, e.g.
+"   <source lang="foo">...</source>
+" and another covering tags on their own lines, e.g.
+"   <source lang="foo">
+"     ...
+"   </source>
+function! s:define_region(filetype, tag, group_name, wiki_lang) abort
+    " Region containing opening/closing tags and code
+    exe 'syntax region wiki_' . a:filetype . '_region_' . a:tag . ' '
+    \   'start=/\v\<' . a:tag . '\s+lang\=\"' . a:wiki_lang . '\"\>/ ' .
+    \   'end=/\v\<\/' . a:tag . '\>/ '.
+    \   'keepend contains=wikiSourceTag,' .
+    \                     'wikiSourceEndTag,' .
+    \                     'wikiSyntaxHLTag,' .
+    \                     'wikiSyntaxHLEndTag,' .
+    \                     'wiki_' . a:filetype . '_region_' . a:tag . '_code'
 
-    " <syntaxhighlight> tag
-    exe 'syntax region wiki_' . a:filetype . '_region ' .
-    \   'matchgroup=htmlTag '
-    \   "start='<syntaxhighlight lang=\"" . a:wiki_lang . "\">' " .
-    \   "end='</syntaxhighlight>' ".
-    \   'keepend contains=wikiSyntaxHLTag,wikiSyntaxHLEndTag,@' . a:group_name
+    " Region containing code
+    " Opening/closing tags have a line on their own
+    exe 'syntax region wiki_' . a:filetype . '_region_' . a:tag . '_code ' .
+    \   'start=/\v^(.(\<' . a:tag . '\s+lang\=\"[^"]+\"\>)@<!)*$/ ' .
+    \   'end=/\v(\<\/' . a:tag . '\>)@=/ '.
+    \   'nextgroup=wikiSourceEndTag '
+    \   'contained ' .
+    \   'keepend contains=@' . a:group_name
+
+    " Region containing code
+    " Opening/closing tags in line with code
+    exe 'syntax region wiki_' . a:filetype . '_region_' . a:tag . '_code ' .
+    \   'start=/\v(\<' . a:tag . '\s+lang\=\"[^"]+\"\>)@<=/ ' .
+    \   'end=/\v(\<\/' . a:tag . '\>)@=/ '.
+    \   'contained ' .
+    \   'keepend contains=@' . a:group_name
 endfunction
 
 " Perform highlighting for a given wiki language
@@ -158,7 +182,8 @@ function! s:highlight_wiki_lang(wiki_lang, filetype, already_included_ft) abort
         let a:already_included_ft[a:filetype] = 1
     endif
 
-    call s:define_region(a:filetype, l:group_name, a:wiki_lang)
+    call s:define_region(a:filetype, 'source', l:group_name, a:wiki_lang)
+    call s:define_region(a:filetype, 'syntaxhighlight', l:group_name, a:wiki_lang)
 endfunction
 
 " Perform highlighting

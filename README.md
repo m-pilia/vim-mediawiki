@@ -7,7 +7,8 @@ vim-mediawiki: vim plugin to edit MediaWiki pages
 This is a plugin to help editing pages of a MediaWiki site from vim/neovim. It
 provides:
 * filetype detection
-* syntax highlighting
+* improved syntax highlighting
+* page preview
 * auto-completion of links and templates with a
   [coc.nvim](https://github.com/neoclide/coc.nvim) source
 * `<plug>` mappings for text objects
