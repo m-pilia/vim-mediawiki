@@ -2,6 +2,8 @@ Before:
   let b:script = 'autoload/coc/source/mediawiki.vim'
   source test/utils.vim
 
+  call ClearSettings()
+
   let Function = GetFunction(b:script, 'handler')
 
   let g:vim_mediawiki_site = 'some_site'

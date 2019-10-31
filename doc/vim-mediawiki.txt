@@ -7,6 +7,7 @@ CONTENTS                                              *vim-mediawiki-contents*
     Introduction..................|vim-mediawiki-introduction|
     Installation..................|vim-mediawiki-installation|
     Auto-completion...............|vim-mediawiki-auto-completion|
+    Commands......................|vim-mediawiki-commands|
     Options.......................|vim-mediawiki-options|
     Text objects..................|vim-mediawiki-text-objects|
     Mappings......................|vim-mediawiki-mappings|
@@ -41,11 +42,37 @@ suggested when typing more than one word inside the brackets.
 
 
 ==============================================================================
+COMMANDS                                              *vim-mediawiki-commands*
+
+
+MediaWikiPreview                                            *MediaWikiPreview*
+
+Generate a preview of the current page and open it in the web browser. The
+preview can be configured with |g:vim_mediawiki_browser_command| and
+|g:vim_mediawiki_skins|.
+
+
+==============================================================================
 OPTIONS                                                *vim-mediawiki-options*
 
 A set of variables allows to customise the behaviour of the plugin. All
 variables can either be set globally as `g:vim_mediawiki_...` or locally for
 each buffer with `b:vim_mediawiki_...`.
+
+
+g:vim_mediawiki_browser_command              *g:vim_mediawiki_browser_command*
+                                             *b:vim_mediawiki_browser_command*
+    Type: |string|
+    Default: `firefox \r`
+
+    Command used to call the browser when opening the preview of a page.
+    The carriage return `\r` will be replaced with the page address.
+
+    Example:
+>
+    let b:vim_mediawiki_browser_command = 'firefox \r'
+    let g:vim_mediawiki_browser_command = 'chromium \r'
+<
 
 
 g:vim_mediawiki_completion_namespaces  *g:vim_mediawiki_completion_namespaces*
@@ -178,6 +205,27 @@ g:vim_mediawiki_site                                    *g:vim_mediawiki_site*
 >
     let g:vim_mediawiki_site = 'en.wikipedia.org'
     let b:vim_mediawiki_site = 'de.wikipedia.org'
+<
+
+
+g:vim_mediawiki_skins                                  *g:vim_mediawiki_skins*
+                                                       *b:vim_mediawiki_skins*
+    Type: |dict|
+    Default: `{'default': 'vector'}`
+
+    Dictionary mapping values of |g:vim_mediawiki_site| to the skin
+    (https://www.mediawiki.org/wiki/Manual:Skins) used when previewing
+    a page. If a site is not present in the keys, the 'default' entry
+    will be used. Global and local settings are merged similarly to
+    |g:vim_mediawiki_completion_namespaces|.
+
+    Example:
+>
+    let b:vim_mediawiki_skins = {
+    \   'default': 'nostalgia',
+    \   'en.wikipedia.org': 'monobook',
+    \   'sv.wikipedia.org': 'modern',
+    \ }
 <
 
 

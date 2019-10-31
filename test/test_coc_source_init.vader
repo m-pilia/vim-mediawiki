@@ -1,0 +1,8 @@
+Execute(Test coc#source#mediawiki#init()):
+  AssertEqual
+  \ {
+  \   'priority': 90,
+  \   'shortcut': 'MW',
+  \   'filetypes': ['mediawiki'],
+  \ },
+  \ coc#source#mediawiki#init()

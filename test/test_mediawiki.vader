@@ -1,10 +1,21 @@
 Before:
   source test/utils.vim
 
+  call ClearSettings()
+
+  let warning_text = 'some_warning_text'
+
 
 After:
-  unlet! b:vim_mediawiki_some_variable
-  unlet! g:vim_mediawiki_some_variable
+  unlet! warning_text
+
+
+Execute(Test mediawiki#warning):
+  call mediawiki#warning(warning_text)
+
+  let message_list = GetMessages()
+
+  AssertEqual 'vim-mediawiki: ' . warning_text, message_list[-1]
 
 
 Execute(Test mediawiki#get_var()):
@@ -19,4 +30,34 @@ Execute(Test mediawiki#get_var()):
   AssertEqual
   \ b:vim_mediawiki_some_variable,
   \ mediawiki#get_var(bufnr(''), 'some_variable')
+
+
+Execute(Test mediawiki#get_site_var()):
+  let g:vim_mediawiki_completion_namespaces = {
+  \ 'default': 'default_namespaces',
+  \ 'some_site': 'some_site_namespaces',
+  \ }
+
+  " Test global retrieval
+  let g:vim_mediawiki_site = 'some_site'
+
+  AssertEqual
+  \ g:vim_mediawiki_completion_namespaces['some_site'],
+  \ mediawiki#get_site_var(bufnr(''), 'completion_namespaces')
+
+  " Test buffer-local retrieval
+  let b:vim_mediawiki_completion_namespaces = {
+  \ 'some_site': 'some_site_namespaces_ovewritten',
+  \ }
+
+  AssertEqual
+  \ b:vim_mediawiki_completion_namespaces['some_site'],
+  \ mediawiki#get_site_var(bufnr(''), 'completion_namespaces')
+
+  " Test default fallback
+  let g:vim_mediawiki_site = 'some_unknown_site'
+
+  AssertEqual
+  \ g:vim_mediawiki_completion_namespaces['default'],
+  \ mediawiki#get_site_var(bufnr(''), 'completion_namespaces')
 

@@ -1,17 +1,19 @@
 Before:
+  source test/utils.vim
+
+  call ClearSettings()
+
   unlet! b:did_ftplugin
+
   let g:vim_mediawiki_mappings = 0
+  let g:vim_mediawiki_preloaded_wikilangs = []
+  let g:vim_mediawiki_ignored_wikilangs = []
+  let g:vim_mediawiki_wikilang_map = {}
 
 
 After:
   unlet! b:did_ftplugin
   unlet! g:loaded_surround
-  unlet! g:vim_mediawiki_mappings
-  unlet! g:vim_mediawiki_surround
-  unlet! b:vim_mediawiki_surround_wikilink
-  unlet! b:vim_mediawiki_surround_template
-  unlet! b:vim_mediawiki_surround_bold
-  unlet! b:vim_mediawiki_surround_italic
   mapclear
 
 
@@ -20,10 +22,10 @@ Execute(Test settings):
   let g:loaded_surround = 1
 
   let g:vim_mediawiki_surround = 1
-  let b:vim_mediawiki_surround_wikilink = 'a'
-  let b:vim_mediawiki_surround_template = 'b'
-  let b:vim_mediawiki_surround_bold = 'c'
-  let b:vim_mediawiki_surround_italic = 'd'
+  let g:vim_mediawiki_surround_wikilink = 'a'
+  let g:vim_mediawiki_surround_template = 'b'
+  let g:vim_mediawiki_surround_bold = 'c'
+  let g:vim_mediawiki_surround_italic = 'd'
 
   runtime ftplugin/mediawiki.vim
 

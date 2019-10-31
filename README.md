@@ -7,7 +7,8 @@ vim-mediawiki: vim plugin to edit MediaWiki pages
 This is a plugin to help editing pages of a MediaWiki site from vim/neovim. It
 provides:
 * filetype detection
-* syntax highlighting
+* improved syntax highlighting
+* page preview
 * auto-completion of links and templates with a
   [coc.nvim](https://github.com/neoclide/coc.nvim) source
 * `<plug>` mappings for text objects
@@ -69,6 +70,19 @@ italic and bold markers, and `<plug>(mediawiki-text-object-inside-heading)` and
 `<plug>(mediawiki-text-object-around-heading)` to operate inside or around
 headings respectively.
 
+The `<plug>` mappings can be associated to some key mappings, for instance:
+```viml
+vmap <silent> <buffer> i' <plug>(mediawiki-text-object-inside-tick)
+vmap <silent> <buffer> a' <plug>(mediawiki-text-object-around-tick)
+omap <silent> <buffer> i' <plug>(mediawiki-text-object-inside-tick)
+omap <silent> <buffer> a' <plug>(mediawiki-text-object-around-tick)
+
+vmap <silent> <buffer> ih <plug>(mediawiki-text-object-inside-heading)
+vmap <silent> <buffer> ah <plug>(mediawiki-text-object-around-heading)
+omap <silent> <buffer> ih <plug>(mediawiki-text-object-inside-heading)
+omap <silent> <buffer> ah <plug>(mediawiki-text-object-around-heading)
+```
+
 Surround
 ========
 
@@ -82,7 +96,7 @@ let g:vim_mediawiki_surround_template = 't'
 let g:vim_mediawiki_surround_bold = 'b'
 let g:vim_mediawiki_surround_italic = 'i'
 ```
-and can be disabled by settings
+and can be disabled by setting
 ```viml
 let g:vim_mediawiki_surround = 0
 ```
@@ -191,6 +205,18 @@ fetched. Default:
 ```viml
 let g:vim_mediawiki_completion_limit = 15
 ```
+
+## Preview
+
+The command `MediaWikiPreview` generates a preview of the page being edited,
+and loads it in a web browser window. It is possible to customise the command
+used to open the browser, by setting
+```viml
+let g:vim_mediawiki_browser_command = "chromium \r"
+```
+where the carriage return character `\r` will be replaced with the address of
+the page to open (attention should be paid to insert an actual carriage return
+character, and to not escape the backslash).
 
 ## Mappings
 

@@ -2,9 +2,12 @@ Before:
   let b:script = 'autoload/coc/source/mediawiki.vim'
   source test/utils.vim
 
+  call ClearSettings()
+
   let Function = GetFunction(b:script, 'get_prefix')
 
   let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_completion_prefix_length = 5
   let g:vim_mediawiki_completion_namespaces = {
   \ 'default': {
   \       '[[': 0,

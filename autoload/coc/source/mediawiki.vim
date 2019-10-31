@@ -1,16 +1,5 @@
 let s:script = expand('<sfile>:p:h:h:h:h') . '/scripts/list_pages.py'
 
-" Get the dictionary of completion namespaces for a buffer
-function! s:get_namespaces(bufnr) abort
-    let l:ns = mediawiki#get_var(a:bufnr, 'completion_namespaces')
-    if exists('b:vim_mediawiki_completion_namespaces') &&
-    \  exists('g:vim_mediawiki_completion_namespaces')
-        let l:ns = extend(copy(l:ns), g:vim_mediawiki_completion_namespaces, 'keep')
-    endif
-    let l:site = mediawiki#get_var(a:bufnr, 'site')
-    return index(keys(l:ns), l:site) >= 0 ? l:ns[l:site] : l:ns['default']
-endfunction
-
 " Get the completion prefix at cursor position
 "
 " The namespace prefix is one of the keys in the namespaces dictionary,
@@ -21,7 +10,7 @@ endfunction
 " When looking for the opening signs, avoid matching `{{{` (template
 " arguments) and `{{#` (magic words).
 function! s:get_prefix(options) abort
-    let l:namespaces = keys(s:get_namespaces(a:options.bufnr))
+    let l:namespaces = keys(mediawiki#get_site_var(a:options.bufnr, 'completion_namespaces'))
     let l:min_prefix_length = mediawiki#get_var(a:options.bufnr, 'completion_prefix_length')
     for l:namespace in reverse(sort(l:namespaces))
         let l:pattern = '\c\V\^\.\*{\@<!' . l:namespace . '\[{#]\@!\(\[^\]\}]\*\)\$'
@@ -82,7 +71,7 @@ function! coc#source#mediawiki#complete(options, callback) abort
     endif
 
     let l:prefix = s:get_prefix(a:options)
-    let l:namespace = s:get_namespaces(a:options.bufnr)[l:prefix[0]]
+    let l:namespace = mediawiki#get_site_var(a:options.bufnr, 'completion_namespaces')[l:prefix[0]]
 
     let l:command = [
     \   'python', s:script,

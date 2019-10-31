@@ -1,5 +1,10 @@
 Before:
+  source test/utils.vim
+
+  call ClearSettings()
+
   let g:vim_mediawiki_site = 'some_site'
+  let g:vim_mediawiki_completion_prefix_length = 5
   let g:vim_mediawiki_completion_namespaces = {
   \ 'default': {
   \       '[[': 0,

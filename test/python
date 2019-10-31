@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # Mock of the Python interpreter that echoes all its arguments
-echo "$@"
+echo "$@" | tee python_output

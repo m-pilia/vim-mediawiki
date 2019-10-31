@@ -1,14 +1,16 @@
 Before:
+  source test/utils.vim
+
+  call ClearSettings()
+
   let g:vim_mediawiki_ignored_wikilangs = []
   let g:vim_mediawiki_preloaded_wikilangs = []
   let g:vim_mediawiki_wikilang_map = {}
+  let g:vim_mediawiki_mappings = 0
+  let g:vim_mediawiki_surround = 0
 
 
 After:
-  unlet! g:vim_mediawiki_wikilang_map
-  unlet! g:vim_mediawiki_ignored_wikilangs
-  unlet! g:vim_mediawiki_preloaded_wikilangs
-
   bufdo bd
 
 

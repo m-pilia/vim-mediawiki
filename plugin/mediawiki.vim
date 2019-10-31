@@ -64,8 +64,17 @@ if !exists('g:vim_mediawiki_surround_italic')
     let g:vim_mediawiki_surround_italic = 'i'
 endif
 
-augroup vim_media_wiki
-    autocmd!
-    autocmd Syntax mediawiki call mediawiki#fenced_languages#perform_highlighting()
-    autocmd BufWritePost * call mediawiki#fenced_languages#perform_highlighting()
-augroup END
+if !exists('g:vim_mediawiki_browser_command')
+    let g:vim_mediawiki_browser_command = "firefox \r"
+endif
+
+let s:default_skins = {'default': 'vector'}
+if !exists('g:vim_mediawiki_skins')
+    let g:vim_mediawiki_skins = s:default_skins
+else
+    let g:vim_mediawiki_skins = extend(
+    \   copy(s:default_skins),
+    \   g:vim_mediawiki_skins)
+endif
+
+command! MediaWikiPreview call mediawiki#preview()
