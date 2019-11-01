@@ -27,12 +27,13 @@ syntax spell toplevel
 syntax clear htmlTagName
 syntax keyword htmlTagName contained big blockquote br caption center cite code
 syntax keyword htmlTagName contained dd del div dl dt font hr ins li
-syntax keyword htmlTagName contained ol p poem pre rb rp rt ruby s small span strike sub
+syntax keyword htmlTagName contained ol p pre rb rp rt ruby s small span strike sub
 syntax keyword htmlTagName contained sup table td th tr tt ul var
 syntax match   htmlTagName contained "\<\(b\|i\|u\|h[1-6]\|em\|strong\)\>"
 
 " Allowed Wiki tag names
-syntax keyword htmlTagName contained math nowiki ref references source syntaxhighlight
+syntax keyword htmlTagName contained includeonly math noinclude nowiki poem
+syntax keyword htmlTagName contained ref references source syntaxhighlight
 
 " Allowed arg names
 syntax clear htmlArg
