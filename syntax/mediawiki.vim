@@ -78,7 +78,9 @@ syntax region wikiMath start="<math>" end="<\/math>" keepend contains=htmlTag,ht
 syntax region wikiTeX start=/\v(\<math\>)@<=/ end=/\v(\<\/math\>)@=/ keepend contained contains=@texMathZoneGroup
 syntax region wikiTeX start=/\v^(.(\<math\>)@<!)*$/ end=/\v(\<\/math\>)@=/ nextgroup=htmlEndTag keepend contained contains=@texMathZoneGroup
 
-syntax cluster wikiText contains=wikiExternalLink,wikiLink,wikiTemplate,wikiNowiki,wikiNowikiEndTag,wikiItalic,wikiBold,wikiBoldAndItalic
+syntax cluster wikiText contains=wikiExternalLink,wikiLink,wikiTemplate,wikiNowiki,wikiNowikiEndTag,wikiItalic,wikiBold,wikiBoldAndItalic,htmlComment
+
+syntax cluster wikiTag contains=htmlTag,wikiMath,wikiNowiki,wikiSource,wikiSyntaxHL
 
 " Tables
 syntax cluster wikiTableFormat contains=wikiTemplate,htmlString,htmlArg,htmlValue
@@ -124,21 +126,22 @@ syntax match wikiLinkName /\v(\|)@<=.*/ contained contains=wikiExternalLink,wiki
 syntax match wikiLinkSuffix /\v[^\[].*/ contained
 
 syntax match wikiExternalLink "\vhttps?\:\/\/[^[:space:]]*(\_s)@="
-syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(http:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
-syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(https:\)\@="  end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
-syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(ftp:\)\@="    end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
-syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(gopher:\)\@=" end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
-syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(news:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
-syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(mailto:\)\@=" end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(http:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(https:\)\@="  end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(ftp:\)\@="    end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(gopher:\)\@=" end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(news:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
+syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(mailto:\)\@=" end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
 syntax match wikiExternalLinkName '[[:space:]][^\]]*' contained
 
+syntax region wikiTemplate start=/\v(\{)@<!\{\{(\{)@!/ matchgroup=wikiTemplateDelim end="}}" extend contains=wikiTemplateName,wikiTemplateField,wikiTemplateParam
 syntax match wikiTemplateName /{{[^{|}<>\[\]]\+/hs=s+2 contained
-syntax match wikiTemplateArgName /\v(\|)@<=[^=]+(\=)@=/ contained
-syntax match wikiTemplateArgVal /\v(\|)@<=[^=|]+(\||$)@=/ contained contains=wikiNowiki,wikiNowikiEndTag,wikiTemplateParam,wikiTemplate,wikiExternalLink,wikiLink
-syntax match wikiTemplateArgVal /\v(\=)@<=[^|]+/ contained contains=wikiNowiki,wikiNowikiEndTag,wikiTemplateParam,wikiTemplate,wikiExternalLink,wikiLink
-syntax match wikiTemplateArgVal /\v^\s*[^|{]+/ contained contains=wikiNowiki,wikiNowikiEndTag,wikiTemplateParam,wikiTemplate,wikiExternalLink,wikiLink
-syntax region wikiTemplate start="{{" matchgroup=wikiTemplateDelim end="}}" keepend extend contains=wikiTemplateName,wikiTemplateArgName,wikiTemplateArgVal
-syntax region wikiTemplateParam start="{{{\s*\d" end="}}}" extend contains=wikiTemplateName
+
+syntax match wikiTemplateEqual /=/                                           contained
+syntax match wikiTemplateFieldName /\v(\|)@<=[^=]+(\=)@=/                    contained
+syntax match wikiTemplateFieldValue /\v[^=]{-}(\||\}\}|$)@=/                 contained contains=wikiTemplateParam,@wikiText,@wikiTag
+syntax region wikiTemplateField start="|\zs"     end=/\v\ze(\||\}\})/        contained contains=wikiTemplateFieldName,wikiTemplateFieldValue,wikiTemplateEqual
+syntax region wikiTemplateParam start="{{{\s*\d" end="}}}"            extend contained contains=wikiTemplateName
 
 syntax match wikiParaFormatChar /^[\:|\*|;|#]\+/
 syntax match wikiParaFormatChar /^-----*/
@@ -166,12 +169,14 @@ highlight def link wikiLinkSuffix            wikiLinkText
 highlight def link wikiExternalLink          htmlLink
 highlight def link wikiExternalLinkName      htmlPreProc
 highlight def link wikiExternalLinkDelimiter htmlPreProc
-highlight def link wikiTemplateArgName       Identifier
-highlight def link wikiTemplateArgVal        String
-highlight def link wikiTemplate              Statement
-highlight def link wikiTemplateDelim         Statement
-highlight def link wikiTemplateParam         htmlSpecial
-highlight def link wikiTemplateName          Type
+
+highlight def link wikiTemplate          Statement
+highlight def link wikiTemplateFieldName Identifier
+highlight def link wikiTemplateDelim     Statement
+highlight def link wikiTemplateName      Type
+highlight def link wikiTemplateParam     Constant
+highlight def link wikiTemplateEqual     wikiTemplateDelim
+
 highlight def link wikiParaFormatChar        htmlSpecial
 highlight def link wikiPre                   htmlConstant
 
