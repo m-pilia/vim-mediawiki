@@ -118,12 +118,10 @@ syntax region wikiH4 start="^===="   end="===="   oneline contains=@wikiTop
 syntax region wikiH5 start="^====="  end="====="  oneline contains=@wikiTop
 syntax region wikiH6 start="^======" end="======" oneline contains=@wikiTop
 
-syntax region wikiLink start="\[\[" end="\v\]\].{-}([\[\],.;:#{}'`!"£$%&/()=?^|\\–—[:space:]]|$)@=" keepend oneline transparent contains=wikiLinkBracket,wikiLinkSuffix
-syntax region wikiLinkBracket matchgroup=wikiLinkDelimiter start="\[\[" end="\]\]" keepend oneline contained contains=wikiLinkPage,wikiLinkDelimiter,wikiLinkName
-syntax match wikiLinkPage /\v[^|]+(\|)@=/ contained
-syntax match wikiLinkDelimiter /\V|/ contained nextgroup=wikiLinkName
-syntax match wikiLinkName /\v(\|)@<=.*/ contained contains=wikiExternalLink,wikiLink,wikiNowiki,wikiNowikiEndTag
-syntax match wikiLinkSuffix /\v[^\[].*/ contained
+syntax region wikiLinkName start=/\V|\zs/ end=/\V\ze]]/          contained contains=@wikiText,@wikiTag
+syntax match  wikiLinkPage       /\v(\[\[)@<=[^|\]]+(\||\]\])@=/ contained
+syntax match  wikiLinkAttribute  /\v(\|)@<=[^|\]]+(\|)@=/        contained
+syntax region wikiLink     start="\[\[" end="\v\]\].{-}([\[\],.;:#{}'`!"£$%&/()=?^|\\–—[:space:]]|$)@=" oneline contains=wikiLinkPage,wikiLinkAttribute,wikiLinkName
 
 syntax match wikiExternalLink "\vhttps?\:\/\/[A-Za-z0-9._~:\/?#\[\]@!$&'()*+,;=-]*"
 syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(http:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
@@ -141,13 +139,11 @@ syntax match wikiTemplateEqual /=/                                           con
 syntax match wikiTemplateFieldName /\v(\|)@<=[^=]+(\=)@=/                    contained
 syntax match wikiTemplateFieldValue /\v[^=]{-}(\||\}\}|$)@=/                 contained contains=wikiTemplateParam,@wikiText,@wikiTag
 syntax region wikiTemplateField start="|\zs"     end=/\v\ze(\||\}\})/        contained contains=wikiTemplateFieldName,wikiTemplateFieldValue,wikiTemplateEqual
-syntax region wikiTemplateParam start="{{{\s*\d" end="}}}"            extend contained contains=wikiTemplateName
+syntax region wikiTemplateParam start="{{{\s*\d" end="}}}"            extend contained
 
 syntax match wikiParaFormatChar /^[\:|\*|;|#]\+/
 syntax match wikiParaFormatChar /^-----*/
 syntax match wikiPre            /^\ .*$/         contains=wikiNowiki,wikiNowikiEndTag
-
-highlight def wikiLinkText cterm=underline gui=underline
 
 highlight def link wikiItalic        htmlItalic
 highlight def link wikiBold          htmlBold
@@ -162,10 +158,9 @@ highlight def link wikiH4 htmlTitle
 highlight def link wikiH5 htmlTitle
 highlight def link wikiH6 htmlTitle
 
-highlight def link wikiLinkDelimiter         Statement
-highlight def link wikiLinkpage              wikiLinkText
-highlight def link wikiLinkName              wikiLinkText
-highlight def link wikiLinkSuffix            wikiLinkText
+highlight def link wikiLinkPage              Type
+highlight def link wikiLinkAttribute         Constant
+highlight def link wikiLink                  Statement
 highlight def link wikiExternalLink          htmlLink
 highlight def link wikiExternalLinkName      htmlPreProc
 highlight def link wikiExternalLinkDelimiter htmlPreProc
