@@ -32,7 +32,7 @@ completion can be configured. Multi-word completion is supported, so
 completions will be suggested when typing more than one word inside the
 brackets, together with a hint of the full page name.
 
-![image](https://user-images.githubusercontent.com/8300317/67492770-9bff7380-f67f-11e9-9dd5-bf621ffb30df.png)
+![image](https://user-images.githubusercontent.com/8300317/68047476-2894dc00-fce7-11e9-9f7f-9be1c0485616.png)
 
 You can refer to the relevant [upstream
 documentation](https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources)
