@@ -34,7 +34,7 @@ Execute(Test coc#source#mediawiki#should_complete() with completion):
   \ 'Complete on positive input'
 
 
-Execute(Test coc#source#mediawiki#should_complete() with no completion):
+Execute(Test coc#source#mediawiki#should_complete() on parser function):
   let options = {
   \ 'bufnr': bufnr(''),
   \ 'line': 'foo bar {{#Some text and more}} after',
@@ -43,4 +43,16 @@ Execute(Test coc#source#mediawiki#should_complete() with no completion):
 
   Assert
   \ !coc#source#mediawiki#should_complete(options),
-  \ 'Do not complete on negative input'
+  \ 'Do not complete on parser function'
+
+
+Execute(Test coc#source#mediawiki#should_complete() after pipe):
+  let options = {
+  \ 'bufnr': bufnr(''),
+  \ 'line': 'foo bar [[Some|text and more]] after',
+  \ 'colnr': 20,
+  \ }
+
+  Assert
+  \ !coc#source#mediawiki#should_complete(options),
+  \ 'Do not complete after a pipe'

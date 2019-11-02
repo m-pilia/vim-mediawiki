@@ -16,7 +16,7 @@ function! s:get_prefix(options) abort
         let l:pattern = '\c\V\^\.\*{\@<!' . l:namespace . '\[{#]\@!\(\[^\]\}]\*\)\$'
         let l:match = matchlist(a:options.line[0:a:options.colnr - 2], l:pattern)
         if len(l:match)
-            if len(l:match[1]) < l:min_prefix_length
+            if l:match[1] =~# '|' || len(l:match[1]) < l:min_prefix_length
                 return []
             endif
             return [l:namespace, l:match[1]]
