@@ -159,3 +159,219 @@ Expect(Text around delimiters is removed):
   Example text.
   Some
   Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> i<bar> <plug>(mediawiki-text-object-inside-pipes)
+  omap <buffer> i<bar> <plug>(mediawiki-text-object-inside-pipes)
+Do(Delete using text object for inside pipes):
+  2gg
+  15|
+  di|
+Expect(Text inside delimiters is removed):
+  Example text.
+  [[link page||named=argument|link name]]
+  Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> a<bar> <plug>(mediawiki-text-object-around-pipes)
+  omap <buffer> a<bar> <plug>(mediawiki-text-object-around-pipes)
+Do(Delete using text object for around pipes):
+  2gg
+  15|
+  da|
+Expect(Text around delimiters is removed):
+  Example text.
+  [[link pagenamed=argument|link name]]
+  Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> ip <plug>(mediawiki-text-object-inside-link-page)
+  omap <buffer> ip <plug>(mediawiki-text-object-inside-link-page)
+Do(Delete using text object for inside page):
+  2gg
+  4|
+  dip
+Expect(Text inside delimiters is removed):
+  Example text.
+  [[|argument|named=argument|link name]]
+  Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> ap <plug>(mediawiki-text-object-around-link-page)
+  omap <buffer> ap <plug>(mediawiki-text-object-around-link-page)
+Do(Delete using text object for inside page):
+  2gg
+  4|
+  dap
+Expect(Text around delimiters is removed):
+  Example text.
+  argument|named=argument|link name]]
+  Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> in <plug>(mediawiki-text-object-inside-link-name)
+  omap <buffer> in <plug>(mediawiki-text-object-inside-link-name)
+Do(Delete using text object for inside name):
+  2gg
+  45|
+  din
+Expect(Text inside delimiters is removed):
+  Example text.
+  [[link page|argument|named=argument|]]
+  Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> an <plug>(mediawiki-text-object-around-link-name)
+  omap <buffer> an <plug>(mediawiki-text-object-around-link-name)
+Do(Delete using text object for around name):
+  2gg
+  45|
+  dan
+Expect(Text around delimiters is removed):
+  Example text.
+  [[link page|argument|named=argument
+  Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> ia <plug>(mediawiki-text-object-inside-named-argument)
+  omap <buffer> ia <plug>(mediawiki-text-object-inside-named-argument)
+Do(Delete using text object for inside named argument):
+  2gg
+  32|
+  dia
+Expect(Text inside delimiters is removed):
+  Example text.
+  [[link page|argument|named=|link name]]
+  Example paragraph.
+
+
+Given(Text with link):
+  Example text.
+  [[link page|argument|named=argument|link name]]
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> aa <plug>(mediawiki-text-object-around-named-argument)
+  omap <buffer> aa <plug>(mediawiki-text-object-around-named-argument)
+Do(Delete using text object for around named argument):
+  2gg
+  32|
+  daa
+Expect(Text around delimiters is removed):
+  Example text.
+  [[link page|argument|named|link name]]
+  Example paragraph.
+
+
+Given(Text with template):
+  Example text.
+  {{template name|first argument|second argument}}
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> it <plug>(mediawiki-text-object-inside-template-begin)
+  omap <buffer> it <plug>(mediawiki-text-object-inside-template-begin)
+Do(Delete using text object for inside template begin):
+  2gg
+  10|
+  dit
+Expect(Text inside delimiters is removed):
+  Example text.
+  {{|first argument|second argument}}
+  Example paragraph.
+
+
+Given(Text with template):
+  Example text.
+  {{template name|first argument|second argument}}
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> at <plug>(mediawiki-text-object-around-template-begin)
+  omap <buffer> at <plug>(mediawiki-text-object-around-template-begin)
+Do(Delete using text object for around template begin):
+  2gg
+  10|
+  dat
+Expect(Text around delimiters is removed):
+  Example text.
+  first argument|second argument}}
+  Example paragraph.
+
+
+Given(Text with template):
+  Example text.
+  {{template name|first argument|second argument}}
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> iT <plug>(mediawiki-text-object-inside-template-end)
+  omap <buffer> iT <plug>(mediawiki-text-object-inside-template-end)
+Do(Delete using text object for inside template begin):
+  2gg
+  40|
+  diT
+Expect(Text inside delimiters is removed):
+  Example text.
+  {{template name|first argument|}}
+  Example paragraph.
+
+
+Given(Text with template):
+  Example text.
+  {{template name|first argument|second argument}}
+  Example paragraph.
+Execute(Load ftplugin):
+  runtime ftplugin/mediawiki.vim
+  vmap <silent> <buffer> aT <plug>(mediawiki-text-object-around-template-end)
+  omap <buffer> aT <plug>(mediawiki-text-object-around-template-end)
+Do(Delete using text object for around template begin):
+  2gg
+  40|
+  daT
+Expect(Text around delimiters is removed):
+  Example text.
+  {{template name|first argument
+  Example paragraph.

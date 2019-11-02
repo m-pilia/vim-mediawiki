@@ -64,23 +64,41 @@ this source.
 Text objects
 ============
 
-The plugin provides text objects `<plug>(mediawiki-text-object-inside-tick)`
-and `<plug>(mediawiki-text-object-around-tick)` to operate inside or around
-italic and bold markers, and `<plug>(mediawiki-text-object-inside-heading)` and
-`<plug>(mediawiki-text-object-around-heading)` to operate inside or around
-headings respectively.
+The plugin provides a set of text objects:
+* `<plug>(mediawiki-text-object-inside-tick)` and
+  `<plug>(mediawiki-text-object-around-tick)` to operate inside or around
+  italic and bold markers
+* `<plug>(mediawiki-text-object-inside-heading)` and
+  `<plug>(mediawiki-text-object-around-heading)` to operate inside or around
+  headings
+* `<plug>(mediawiki-text-object-inside-pipes)` and
+  `<plug>(mediawiki-text-object-around-pipes)` to operate inside or around
+  pipes (e.g. positional template arguments)
+* `<plug>(mediawiki-text-object-inside-link-page)` and
+  `<plug>(mediawiki-text-object-around-link-page)` to operate inside or around
+  the leftmost part of a link (between `[[` and `|`), containing the page of a
+  link
+* `<plug>(mediawiki-text-object-inside-link-name)` and
+  `<plug>(mediawiki-text-object-around-link-name)` to operate inside or around
+  the rightmost part of a link (between `|` and `]]`), containing the name of a
+  link
+* `<plug>(mediawiki-text-object-inside-template-begin)` and
+  `<plug>(mediawiki-text-object-around-template-begin)` to operate inside or around
+  the leftmost part of a template (between `{{` and `|`)
+* `<plug>(mediawiki-text-object-inside-template-end)` and
+  `<plug>(mediawiki-text-object-around-template-end)` to operate inside or around
+  the rightmost part of a template (between `|` and `}}`)
+* `<plug>(mediawiki-text-object-inside-named-argument)` and
+  `<plug>(mediawiki-text-object-around-named-argument)` to operate inside or around
+  a named argument (between `=` and `|`, where `|` is always excluded from the
+  text object)
 
-The `<plug>` mappings can be associated to some key mappings, for instance:
+The `<plug>` mappings can be associated to key mappings, for instance:
 ```viml
 vmap <silent> <buffer> i' <plug>(mediawiki-text-object-inside-tick)
 vmap <silent> <buffer> a' <plug>(mediawiki-text-object-around-tick)
 omap <silent> <buffer> i' <plug>(mediawiki-text-object-inside-tick)
 omap <silent> <buffer> a' <plug>(mediawiki-text-object-around-tick)
-
-vmap <silent> <buffer> ih <plug>(mediawiki-text-object-inside-heading)
-vmap <silent> <buffer> ah <plug>(mediawiki-text-object-around-heading)
-omap <silent> <buffer> ih <plug>(mediawiki-text-object-inside-heading)
-omap <silent> <buffer> ah <plug>(mediawiki-text-object-around-heading)
 ```
 
 Surround

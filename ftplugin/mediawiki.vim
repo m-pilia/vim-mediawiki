@@ -73,6 +73,42 @@ vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :<C-U>call 
 omap <silent> <buffer> <plug>(mediawiki-text-object-inside-tick) :normal v:<C-U>silent! normal! T'vt'<CR>
 omap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :normal v:<C-U>call mediawiki#text_object("\\v(\\'+)@<=\\'(\\')@!")<CR>
 
+" Text objects for arguments between pipes
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-pipes) :<C-U>silent! normal! T<bar>vt<bar><CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-pipes) :<C-U>silent! normal! F<bar>vlf<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-pipes) :normal v:<C-U>silent! normal! T<bar>vt<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-pipes) :normal v:<C-U>silent! normal! F<bar>vlf<bar><CR>
+
+" Text objects for leftmost section of link (between the '[[' and the first '|')
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-link-page) :<C-U>silent! normal! T[vt<bar><CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-link-page) :<C-U>silent! normal! F[hvf<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-link-page) :normal v:<C-U>silent! normal! T[vt<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-link-page) :normal v:<C-U>silent! normal! F[hvf<bar><CR>
+
+" Text objects for rightmost section of link (between the last '|' and the ']]')
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-link-name) :<C-U>silent! normal! T<bar>vt]<CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-link-name) :<C-U>silent! normal! F<bar>vf]l<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-link-name) :normal v:<C-U>silent! normal! T<bar>vt]<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-link-name) :normal v:<C-U>silent! normal! F<bar>vf]l<CR>
+
+" Text objects for leftmost section of template (between the '{{' and the first '|')
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-template-begin) :<C-U>silent! normal! T{vt<bar><CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-template-begin) :<C-U>silent! normal! F{hvf<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-template-begin) :normal v:<C-U>silent! normal! T{vt<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-template-begin) :normal v:<C-U>silent! normal! F{hvf<bar><CR>
+
+" Text objects for rightmost section of template (between the last '|' and the '}}')
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-template-end) :<C-U>silent! normal! T<bar>vt}<CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-template-end) :<C-U>silent! normal! F<bar>vf}l<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-template-end) :normal v:<C-U>silent! normal! T<bar>vt}<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-template-end) :normal v:<C-U>silent! normal! F<bar>vf}l<CR>
+
+" Text objects for named argument (between '=' and '|')
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-named-argument) :<C-U>silent! normal! T=vt<bar><CR>
+vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-named-argument) :<C-U>silent! normal! F=vt<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-named-argument) :normal v:<C-U>silent! normal! T=vt<bar><CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-named-argument) :normal v:<C-U>silent! normal! F=vt<bar><CR>
+
 " Detect fenced languages (updated on buffer writing)
 call mediawiki#fenced_languages#perform_highlighting()
 augroup vim_media_wiki
