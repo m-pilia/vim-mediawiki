@@ -12,6 +12,7 @@ provides:
 * auto-completion of links and templates with a
   [coc.nvim](https://github.com/neoclide/coc.nvim) source
 * `<plug>` mappings for text objects
+* matching pairs for [matchit.vim](https://github.com/vim/vim/blob/master/runtime/pack/dist/opt/matchit/doc/matchit.txt)
 * integration with [vim-surround](https://github.com/tpope/vim-surround)
 
 Installation

@@ -18,13 +18,26 @@ setlocal formatoptions+=roq
 setlocal foldexpr=getline(v:lnum)=~'^\\(=\\+\\)[^=]\\+\\1\\(\\s*<!--.*-->\\)\\=\\s*$'?\">\".(len(matchstr(getline(v:lnum),'^=\\+'))-1):\"=\"
 setlocal foldmethod=expr
 
-" To match HTML tags with % when using the matchit plugin
-"
-" Credits: Johannes Zellner and Benji Fisher
-" https://github.com/vim/vim/blob/946e27ab65/runtime/ftplugin/html.vim#L28-L35
+" To match delimiters with % when using the matchit plugin
 if exists('loaded_matchit')
     let b:match_ignorecase = 1
-    let b:match_words = '<:>,' .
+
+    " Match bold/italic markers and heading section delimiters
+    let b:match_words =
+    \ get(b:, 'match_words', '') .
+    \ (get(b:, 'match_words', '') =~# '\s*' ? '' : ',') .
+    \ '\(^\|[^'']\@<=\)\(''\{2}\|''\{3}\|''\{5}\)\<:\>\(''\{2}\|''\{3}\|''\{5}\)\([^'']\@=\|$\),' .
+    \ '\(^\|[^=]\@<=\)=\{2\}[^=]\@=:[^=]\@<==\{2\}\([^=]\@=\|$\),' .
+    \ '\(^\|[^=]\@<=\)=\{3\}[^=]\@=:[^=]\@<==\{3\}\([^=]\@=\|$\),' .
+    \ '\(^\|[^=]\@<=\)=\{4\}[^=]\@=:[^=]\@<==\{4\}\([^=]\@=\|$\),' .
+    \ '\(^\|[^=]\@<=\)=\{5\}[^=]\@=:[^=]\@<==\{5\}\([^=]\@=\|$\),' .
+    \ '\(^\|[^=]\@<=\)=\{6\}[^=]\@=:[^=]\@<==\{6\}\([^=]\@=\|$\)'
+
+    " Credits: HTML tag matching patterns by Johannes Zellner and Benji Fisher
+    " https://github.com/vim/vim/blob/946e27ab65/runtime/ftplugin/html.vim#L28-L35
+    let b:match_words .=
+    \ ',' .
+    \ '<:>,' .
     \ '<\@<=[ou]l\>[^>]*\%(>\|$\):<\@<=li\>:<\@<=/[ou]l>,' .
     \ '<\@<=dl\>[^>]*\%(>\|$\):<\@<=d[td]\>:<\@<=/dl>,' .
     \ '<\@<=\([^/][^ \t>]*\)[^>]*\%(>\|$\):<\@<=/\1>'
