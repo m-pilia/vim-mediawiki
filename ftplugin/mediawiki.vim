@@ -64,14 +64,14 @@ endif
 " Text objects for section headings
 vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-heading) :<C-U>silent! normal! T=vt=<CR>
 vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-heading) :<C-U>call mediawiki#text_object('\v(\=+)@<=\=(\=)@!')<CR>
-omap <silent> <buffer> <plug>(mediawiki-text-object-inside-heading) :normal vih<CR>
-omap <silent> <buffer> <plug>(mediawiki-text-object-around-heading) :normal vah<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-heading) :normal v:<C-U>silent! normal! T=vt=<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-heading) :normal v:<C-U>call mediawiki#text_object('\v(\=+)@<=\=(\=)@!')<CR>
 
 " Text objects for bold and italic
 vnoremap <silent> <buffer> <plug>(mediawiki-text-object-inside-tick) :<C-U>silent! normal! T'vt'<CR>
 vnoremap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :<C-U>call mediawiki#text_object("\\v(\\'+)@<=\\'(\\')@!")<CR>
-omap <silent> <buffer> <plug>(mediawiki-text-object-inside-tick) :normal vi'<CR>
-omap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :normal va'<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-inside-tick) :normal v:<C-U>silent! normal! T'vt'<CR>
+omap <silent> <buffer> <plug>(mediawiki-text-object-around-tick) :normal v:<C-U>call mediawiki#text_object("\\v(\\'+)@<=\\'(\\')@!")<CR>
 
 " Detect fenced languages (updated on buffer writing)
 call mediawiki#fenced_languages#perform_highlighting()
