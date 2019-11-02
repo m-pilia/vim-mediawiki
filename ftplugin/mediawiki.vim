@@ -56,11 +56,11 @@ setlocal formatoptions-=a
 
 " Optional mappings to simplify navigation over wrapped lines
 if mediawiki#get_var(bufnr(''), 'mappings')
-    nnoremap <buffer> <expr> j v:count == 0 ? 'gj' : 'j'
-    nnoremap <buffer> <expr> k v:count == 0 ? 'gk' : 'k'
-    nnoremap <buffer> 0 g0
-    nnoremap <buffer> ^ g^
-    nnoremap <buffer> $ g$
+    noremap <buffer> <expr> j v:count == 0 ? 'gj' : 'j'
+    noremap <buffer> <expr> k v:count == 0 ? 'gk' : 'k'
+    noremap <buffer> 0 g0
+    noremap <buffer> ^ g^
+    noremap <buffer> $ g$
     nnoremap <buffer> D dg$
     nnoremap <buffer> C cg$
     nnoremap <buffer> A g$a

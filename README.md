@@ -241,16 +241,17 @@ character, and to not escape the backslash).
 
 No mappings are set out-of-the-box. The following optional navigation mappings
 ```viml
-nnoremap <buffer> j gj
-nnoremap <buffer> k gk
-nnoremap <buffer> 0 g0
-nnoremap <buffer> ^ g^
-nnoremap <buffer> $ g$
+noremap <buffer> j gj
+noremap <buffer> k gk
+noremap <buffer> 0 g0
+noremap <buffer> ^ g^
+noremap <buffer> $ g$
 nnoremap <buffer> D dg$
 nnoremap <buffer> C cg$
 nnoremap <buffer> A g$a
 ```
-can be enabled by setting to true the variable
+that help navigating wrapped lines can be enabled by setting to true the
+variable
 ```viml
 let g:vim_mediawiki_mappings = 1
 ```
