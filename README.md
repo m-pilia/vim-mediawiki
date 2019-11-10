@@ -136,6 +136,20 @@ features such as auto-completion. Example:
 let g:vim_mediawiki_site = 'en.wikipedia.org'
 ```
 
+Site-specific options are stored in dictionaries, allowing to map different
+settings to different sites for each buffer, according to the value of
+`b:vim_mediawiki_site`. It is possible to automatically map custom file
+extensions to site-specific settings by creating a custom
+`ftdetect/mediawiki.vim`. For instance, to map files with extension `*.enwiki`
+to settings specific for the English language Wikipedia:
+```viml
+autocmd BufRead,BufNewFile *.enwiki
+\   set filetype=mediawiki |
+\   let b:vim_mediawiki_site = 'en.wikipedia.org' |
+\   set spelllang=en
+
+```
+
 ## Completion
 
 It is possible to customise which
