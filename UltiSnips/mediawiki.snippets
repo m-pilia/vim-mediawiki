@@ -1,0 +1,83 @@
+priority -50
+
+snippet h1 "Level 1 heading"
+= $1 =
+$0
+endsnippet
+
+snippet h2 "Level 2 heading"
+== $1 ==
+$0
+endsnippet
+
+snippet h3 "Level 3 heading"
+=== $1 ===
+$0
+endsnippet
+
+snippet h4 "Level 4 heading"
+==== $1 ====
+$0
+endsnippet
+
+snippet h5 "Level 5 heading"
+===== $1 =====
+$0
+endsnippet
+
+snippet h6 "Level 6 heading"
+====== $1 ======
+$0
+endsnippet
+
+snippet link "External link"
+[${1:https://example.com} ${2:Link title}]$0
+endsnippet
+
+snippet wlink "Wiki-link"
+[[${1:Page}|${2:Link title}]]$0
+endsnippet
+
+snippet img "Image" b
+[[File:${1:file.ext}|thumb${3:|upright=${4:1}}|${5:Caption}]]$0
+endsnippet
+
+snippet cat "Category" b
+[[Category:${1:Name}${2:|${3:Sort string}}]]$0
+endsnippet
+
+snippet templ "Template"
+{{${1:Template name}${2:|${3:Arguments}}}}$0
+endsnippet
+
+snippet ref "<ref>"
+<ref>$1</ref>$0
+endsnippet
+
+snippet refn "<ref name=...>"
+<ref name="$1">$2</ref>$0
+endsnippet
+
+snippet refr "<ref name=... />"
+<ref name="$1" />$0
+endsnippet
+
+snippet refl "<references>" b
+<references>
+$0
+</references>
+endsnippet
+
+snippet refll "<references />" b
+<references />$0
+endsnippet
+
+snippet math "<math> inline"
+<math>$1</math>$0
+endsnippet
+
+snippet :mathb "<math> block" b
+:<math>
+$0
+</math>
+endsnippet

@@ -11,6 +11,7 @@ provides:
 * page preview
 * auto-completion of links and templates with a
   [coc.nvim](https://github.com/neoclide/coc.nvim) source
+* [UltiSnips](https://github.com/SirVer/ultisnips) snippets
 * `<plug>` mappings for text objects
 * matching pairs for [matchit.vim](https://github.com/vim/vim/blob/master/runtime/pack/dist/opt/matchit/doc/matchit.txt)
 * integration with [vim-surround](https://github.com/tpope/vim-surround)
@@ -61,6 +62,21 @@ adapter to plug it in other completion mechanisms. Please refer to the
 [upstream documentation of the
 API](https://github.com/neoclide/coc.nvim/wiki/Create-custom-source) used by
 this source.
+
+Snippets
+========
+
+Snippets in the [UltiSnips](https://github.com/SirVer/ultisnips) format are
+shipped with this plugin, and they should work out-of-the-box if UltiSnips is
+installed and configured. UltiSnips snippets can be used in coc.nvim through
+the [coc-ultisnips source](https://github.com/neoclide/coc-sources).
+
+Please note that this plugin aims to be site-agnostic, therefore no snippets
+are shipped for specific sites, e.g. common templates used on the English
+Wikipedia. Snippets of such kind are out of the scope of this project, but can
+be easily defined in your own configuration, please refer to the [upstream
+documentation](https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt)
+for more information.
 
 Text objects
 ============
