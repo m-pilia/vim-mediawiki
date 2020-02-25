@@ -14,7 +14,52 @@ After:
   delfunction Cleanup
 
 
+Given mediawiki (Example text):
+  This is an example [[File:example.png|parameter|Description [[link|with pipe]] and some<ref>more</ref>]]
+
+  Example {{with template|foo=bar}} and <div class="foo">some inline HTML tag</div>
+
+  Test <math>\text{inline math} \sin{x}</math>
+
+  :<math>
+    \text{and block math}
+  </math>
+
+  Test [https://foobar.com a link]
 Execute(Test syntax):
   runtime syntax/mediawiki.vim
+  redraw
 
   AssertEqual 'mediawiki', b:current_syntax
+
+  AssertEqual 'wikiLink', SyntaxAt(1, 21)
+  AssertEqual 'wikiLinkPage', SyntaxAt(1, 25)
+  AssertEqual 'wikiLinkAttribute', SyntaxAt(1, 44)
+  AssertEqual 'wikiLinkName', SyntaxAt(1, 55)
+  AssertEqual 'wikiLinkPage', SyntaxAt(1, 64)
+  AssertEqual 'wikiLinkName', SyntaxAt(1, 75)
+
+  AssertEqual 'wikiTemplate', SyntaxAt(3, 10)
+  AssertEqual 'wikiTemplateName', SyntaxAt(3, 18)
+  AssertEqual 'wikiTemplateFieldName', SyntaxAt(3, 27)
+  AssertEqual 'wikiTemplateEqual', SyntaxAt(3, 28)
+  AssertEqual 'wikiTemplateFieldValue', SyntaxAt(3, 30)
+
+  AssertEqual 'htmlTagName', SyntaxAt(3, 41)
+  AssertEqual 'htmlArg', SyntaxAt(3, 46)
+  AssertEqual 'htmlString', SyntaxAt(3, 51)
+  AssertEqual 'htmlTagName', SyntaxAt(3, 79)
+
+  AssertEqual 'htmlTagName', SyntaxAt(5, 8)
+  AssertEqual 'texStatement', SyntaxAt(5, 14)
+  AssertEqual 'texMathText', SyntaxAt(5, 25)
+  AssertEqual 'texMathMatcher', SyntaxAt(5, 36)
+  AssertEqual 'htmlTagName', SyntaxAt(5, 42)
+
+  AssertEqual 'wikiParaFormatChar', SyntaxAt(7, 1)
+  AssertEqual 'htmlTagName', SyntaxAt(7, 5)
+  AssertEqual 'texStatement', SyntaxAt(8, 5)
+  AssertEqual 'htmlTagName', SyntaxAt(9, 5)
+
+  AssertEqual 'wikiExternalLink', SyntaxAt(11, 9)
+  AssertEqual 'wikiExternalLinkName', SyntaxAt(11, 29)
