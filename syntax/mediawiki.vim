@@ -121,7 +121,7 @@ syntax region wikiH6 start="^======" end="======" oneline contains=@wikiTop
 
 syntax region wikiLinkName start=/\V|\zs/ end=/\V\ze]]/          contained contains=@wikiText,@wikiTag
 syntax match  wikiLinkPage       /\v(\[\[)@<=[^|\]]+(\||\]\])@=/ contained
-syntax match  wikiLinkAttribute  /\v(\|)@<=[^|\]]+(\|)@=/        contained
+syntax match  wikiLinkAttribute  /\v(\|)@<=[^|\]\[]+(\|)@=/      contained
 syntax region wikiLink     start="\[\[" end="\v\]\].{-}([\[\],.;:#{}'`!"£$%&/()=?^|\\–—[:space:]]|$)@=" oneline contains=wikiLinkPage,wikiLinkAttribute,wikiLinkName
 
 syntax match wikiExternalLink "\vhttps?\:\/\/[A-Za-z0-9._~:\/?#\[\]@!$&'()*+,;=-]*"
