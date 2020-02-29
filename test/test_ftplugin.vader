@@ -26,6 +26,7 @@ Execute(Test settings):
   let g:vim_mediawiki_surround_template = 'b'
   let g:vim_mediawiki_surround_bold = 'c'
   let g:vim_mediawiki_surround_italic = 'd'
+  let g:vim_mediawiki_surround_formatnum = 'e'
 
   runtime ftplugin/mediawiki.vim
 
@@ -48,6 +49,7 @@ Execute(Test settings):
   AssertEqual "{{\r}}", b:surround_{char2nr('b')}
   AssertEqual "'''\r'''", b:surround_{char2nr('c')}
   AssertEqual "''\r''", b:surround_{char2nr('d')}
+  AssertEqual "{{FORMATNUM:\r}}", b:surround_{char2nr('e')}
 
 
 Execute(Test double load):

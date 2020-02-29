@@ -72,6 +72,7 @@ if exists('g:loaded_surround') && mediawiki#get_var(bufnr(''), 'surround')
     let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_template'))} = "{{\r}}"
     let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_bold'))} = "'''\r'''"
     let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_italic'))} = "''\r''"
+    let b:surround_{char2nr(mediawiki#get_var(bufnr(''), 'surround_formatnum'))} = "{{FORMATNUM:\r}}"
 endif
 
 " Text objects for section headings

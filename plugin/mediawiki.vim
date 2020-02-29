@@ -64,6 +64,10 @@ if !exists('g:vim_mediawiki_surround_italic')
     let g:vim_mediawiki_surround_italic = 'i'
 endif
 
+if !exists('g:vim_mediawiki_surround_formatnum')
+    let g:vim_mediawiki_surround_formatnum = 'f'
+endif
+
 if !exists('g:vim_mediawiki_browser_command')
     let g:vim_mediawiki_browser_command = "firefox \r"
 endif
