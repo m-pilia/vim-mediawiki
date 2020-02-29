@@ -124,7 +124,7 @@ syntax match  wikiLinkPage       /\v(\[\[)@<=[^|\]]+(\||\]\])@=/ contained
 syntax match  wikiLinkAttribute  /\v(\|)@<=[^|\]\[]+(\|)@=/      contained
 syntax region wikiLink     start="\[\[" end="\v\]\].{-}([\[\],.;:#{}'`!"£$%&/()=?^|\\–—[:space:]]|$)@=" oneline contains=wikiLinkPage,wikiLinkAttribute,wikiLinkName
 
-syntax match wikiExternalLink "\vhttps?\:\/\/[A-Za-z0-9._~:\/?#\[\]@!$&'()*+,;=-]*"
+syntax match wikiExternalLink "\vhttps?\:\/\/[A-Za-z0-9._~:\/?#\[\]@!$&'()*+,;=%-]*"
 syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(http:\)\@="   end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
 syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(https:\)\@="  end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
 syntax region wikiExternalLink matchgroup=wikiExternalLinkDelimiter start="\[\(ftp:\)\@="    end="\]" oneline keepend contains=wikiNowiki,wikiNowikiEndTag,wikiExternalLinkName,wikiTemplateParam
