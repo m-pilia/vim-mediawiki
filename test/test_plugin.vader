@@ -38,5 +38,6 @@ Execute(Test plugin loading):
   AssertEqual 't', g:vim_mediawiki_surround_template
   AssertEqual 'b', g:vim_mediawiki_surround_bold
   AssertEqual 'i', g:vim_mediawiki_surround_italic
+  AssertEqual 'f', g:vim_mediawiki_surround_formatnum
   AssertEqual "firefox \r", g:vim_mediawiki_browser_command
   AssertEqual {'default': 'vector'}, g:vim_mediawiki_skins
