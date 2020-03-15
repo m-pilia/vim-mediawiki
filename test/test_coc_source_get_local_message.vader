@@ -1,0 +1,64 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+
+  let Function = GetFunction(b:script, 'get_local_message')
+
+
+After:
+  unlet! Function
+
+  unlet! messages
+
+
+Execute(Test s:get_local_message() on v:null):
+
+  let messages = v:null
+
+  AssertEqual
+  \ '',
+  \ Function(messages)
+
+
+Execute(Test s:get_local_message() on string):
+
+  let messages = 'Some message'
+
+  AssertEqual
+  \ string(messages),
+  \ Function(messages)
+
+
+Execute(Test s:get_local_message() on list):
+
+  let messages = ['foo', 2]
+
+  AssertEqual
+  \ string(messages),
+  \ Function(messages)
+
+
+Execute(Test s:get_local_message() with English available):
+
+  let messages = {
+  \   'en': 'message_en',
+  \   'xx': 'message_xx',
+  \ }
+
+  AssertEqual
+  \ 'message_en',
+  \ Function(messages)
+
+
+Execute(Test s:get_local_message() with English unavailable):
+
+  let messages = {
+  \   'xx': 'message_xx',
+  \ }
+
+  AssertEqual
+  \ 'message_xx',
+  \ Function(messages)
+

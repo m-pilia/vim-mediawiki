@@ -1,0 +1,97 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  let Function = GetFunction(b:script, 'handle_template_parameters')
+
+  let mock = NewFunctionMock()
+
+  let template_name = 'template_name'
+  let bufnr = 10
+
+After:
+  unlet! b:script
+
+  unlet! Function
+  unlet! mock
+  unlet! template_name
+  unlet! bufnr
+  unlet! data
+  unlet! expected
+
+
+Execute(Test s:handle_template_parameters() with no input):
+  let data = []
+
+  call Function(bufnr, template_name, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual [v:false], mock.args[0]
+
+
+Execute(Test s:handle_template_parameters() with empty input):
+  let data = [' ']
+
+  call Function(bufnr, template_name, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual [v:false], mock.args[0]
+
+
+Execute(Test s:handle_template_parameters() with valid input):
+  let data = [
+  \  '{',
+  \  '    "parameter1": {',
+  \  '        "label": {',
+  \  '            "it": "Some label 1"',
+  \  '        },',
+  \  '        "description": {',
+  \  '            "it": "Some description 1"',
+  \  '        },',
+  \  '        "type": "string",',
+  \  '        "required": false,',
+  \  '        "suggested": false,',
+  \  '        "example": null,',
+  \  '        "deprecated": false,',
+  \  '        "aliases": [],',
+  \  '        "autovalue": null,',
+  \  '        "default": null',
+  \  '    },',
+  \  '    "parameter2": {',
+  \  '        "label": null,',
+  \  '        "required": false,',
+  \  '        "suggested": false,',
+  \  '        "description": null,',
+  \  '        "example": {',
+  \  '            "en": "Some example"',
+  \  '        },',
+  \  '        "deprecated": true,',
+  \  '        "aliases": ["foo", "bar"],',
+  \  '        "autovalue": null,',
+  \  '        "default": {',
+  \  '            "en": "Some default"',
+  \  '        },',
+  \  '        "type": "unknown"',
+  \  '    }',
+  \  '}',
+  \ ]
+
+  let expected = [
+  \   {
+  \     'menu': 'Some label 1',
+  \     'word': 'parameter1',
+  \     'info': "Some description 1\n",
+  \   },
+  \   {
+  \     'menu': 'parameter2 (deprecated)',
+  \     'word': 'parameter2',
+  \     'info': "Default: Some default\nExample: Some example\nAliases: foo, bar",
+  \   },
+  \ ]
+
+  call Function(bufnr, template_name, mock.function, 0, data, 0)
+
+  AssertEqual 1, mock.count
+  AssertEqual 1, len(mock.args[0])
+  AssertEqual expected, mock.args[0][0]
+

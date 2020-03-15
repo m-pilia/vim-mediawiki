@@ -4,7 +4,7 @@ Before:
 
   call ClearSettings()
 
-  let Function = GetFunction(b:script, 'get_prefix')
+  let Function = GetFunction(b:script, 'get_page_prefix')
 
   let g:vim_mediawiki_site = 'some_site'
   let g:vim_mediawiki_completion_prefix_length = 5

@@ -1,20 +1,16 @@
 Before:
   source test/utils.vim
-  function! Cleanup() abort
-    syntax clear
-    unlet! b:current_syntax
-    call ClearSettings()
-  endfunction
 
-  call Cleanup()
+  call ClearSettings()
+  call ClearSyntax()
 
 
 After:
-  call Cleanup()
-  delfunction Cleanup
+  call ClearSettings()
+  call ClearSyntax()
 
 
-Given mediawiki (Example text):
+Given (Example text):
   This is an example [[File:example.png|parameter|Description [[link|with pipe]] and some<ref>more</ref>]]
 
   Example {{with template|foo=bar}} and <div class="foo">some inline HTML tag</div>

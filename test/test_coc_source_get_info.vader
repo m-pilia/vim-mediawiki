@@ -1,0 +1,45 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+
+  let Function = GetFunction(b:script, 'get_info')
+
+
+After:
+  unlet! Function
+
+  unlet! data
+
+
+Execute(Test s:get_info() with no data):
+  let data = {}
+
+  AssertEqual
+  \ '',
+  \ Function(data)
+
+
+Execute(Test s:get_info() with only description):
+  let data = {
+  \   'description': {'en': 'Some description'},
+  \ }
+
+  AssertEqual
+  \ "Some description\n",
+  \ Function(data)
+
+
+Execute(Test s:get_info() with full data):
+  let data = {
+  \   'description': {'en': 'Some description'},
+  \   'default': {'en': 'Some default'},
+  \   'example': {'en': 'Some example'},
+  \   'aliases': ['some', 'aliases'],
+  \ }
+
+  AssertEqual
+  \ "Some description\n\nDefault: Some default\nExample: Some example\nAliases: some, aliases",
+  \ Function(data)
+

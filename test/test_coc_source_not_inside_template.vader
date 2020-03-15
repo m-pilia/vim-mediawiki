@@ -1,0 +1,88 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+  call ClearSyntax()
+
+  let Function = GetFunction(b:script, 'not_inside_template')
+
+
+After:
+  call ClearSettings()
+  call ClearSyntax()
+
+  unlet! b:script
+
+  unlet! Function
+
+
+Given (Example text):
+  This is an example [[File:example.png|parameter|Description [[link|with pipe]] and some<ref>more</ref>]]
+
+  Example {{with|inline=template}} and {{ with | more = spacing }}.
+
+  {{Example
+  |with
+  |template=out
+   | of = lines
+  }}
+
+  Test <math>\text{inline math} \sin{x}</math>
+
+  :<math>
+    \text{and block math}
+  </math>
+
+  Test [https://foobar.com a link]
+Execute(Test s:not_inside_template()):
+  runtime syntax/mediawiki.vim
+  redraw
+
+  call cursor(1, 10)
+  Assert Function(), "Inside text"
+
+  call cursor(1, 38)
+  Assert Function(), "Inside wikilink"
+
+  call cursor(1, 38)
+  Assert Function(), "Inside wikilink"
+
+  call cursor(3, 16)
+  Assert !Function(), "Start of inline parameter name without spaces"
+
+  call cursor(3, 22)
+  Assert !Function(), "End of inline parameter name without spaces"
+
+  call cursor(3, 47)
+  Assert !Function(), "Start of inline parameter name with spaces"
+
+  call cursor(3, 52)
+  Assert !Function(), "End of inline parameter name with spaces"
+
+  call cursor(6, 2)
+  Assert !Function(), "Start of out-of-line parameter name"
+
+  call cursor(6, 5)
+  Assert !Function(), "End of out-of-line parameter name"
+
+  call cursor(6, 6)
+  Assert !Function(), "One char after end of of out-of-line parameter name"
+
+  call cursor(7, 2)
+  Assert !Function(), "Start of out-of-line parameter name with value"
+
+  call cursor(7, 9)
+  Assert !Function(), "End of out-of-line parameter name with value"
+
+  call cursor(7, 10)
+  Assert !Function(), "One char after end of of out-of-line parameter name with value"
+
+  call cursor(8, 3)
+  Assert !Function(), "Start of out-of-line parameter name with value and spaces"
+
+  call cursor(8, 6)
+  Assert !Function(), "End of out-of-line parameter name with value and spaces"
+
+  call cursor(8, 7)
+  Assert !Function(), "One char after end of of out-of-line parameter name with value and spaces"

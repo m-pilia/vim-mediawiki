@@ -40,6 +40,12 @@ properly, the completion source should work out-of-the-box for buffers of type
 or double braces. Multi-word completion is supported, so completions will be
 suggested when typing more than one word inside the brackets.
 
+When inserting a template parameter name, auto-completion suggestions based on
+TemplateData (https://www.mediawiki.org/wiki/Extension:TemplateData) will be
+provided if the MediaWiki installation of the wiki being edited has the
+TemplateData extension and if the TemplateData fields on the wiki are correctly
+compiled for the desired template.
+
 
 ==============================================================================
 COMMANDS                                              *vim-mediawiki-commands*
