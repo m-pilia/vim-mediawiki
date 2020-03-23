@@ -1,0 +1,97 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+  call ClearSyntax()
+
+  runtime syntax/mediawiki.vim
+  redraw
+
+  let Function = GetFunction(b:script, 'get_template_name')
+
+
+After:
+  call ClearSettings()
+  call ClearSyntax()
+
+  unlet! b:script
+
+  unlet! Function
+
+
+Given (Example text):
+  Example {{with|inline=template}} and {{ padded | with = spaces }}.
+
+  {{Example
+  |with
+  |template=out
+   | of = lines
+  }}
+
+  Test {{template}} with no arguments.
+
+  Test <math>\text{inline math} \sin{x}</math>
+Execute(Test s:get_template_name() within text):
+  call cursor(1, 5)
+  AssertEqual v:null, Function()
+
+Execute(Test s:get_template_name() within emtpy line):
+  call cursor(2, 1)
+  AssertEqual v:null, Function()
+
+Execute(Test s:get_template_name() within parameter with no arguments):
+  call cursor(9, 13)
+  AssertEqual v:null, Function()
+
+Execute(Test s:get_template_name() within math):
+  call cursor(11, 22)
+  AssertEqual v:null, Function()
+
+Execute(Test s:get_template_name() at the beginning on inline template):
+  call cursor(1, 11)
+  AssertEqual 'Template:with', Function()
+
+Execute(Test s:get_template_name() in the middle on inline template):
+  call cursor(1, 16)
+  AssertEqual 'Template:with', Function()
+
+Execute(Test s:get_template_name() at the end on inline template):
+  call cursor(1, 30)
+  AssertEqual 'Template:with', Function()
+
+Execute(Test s:get_template_name() at the beginning of parameter of inline template with spaces):
+  call cursor(1, 49)
+  AssertEqual 'Template:padded', Function()
+
+Execute(Test s:get_template_name() at end of parameter of inline template with spaces):
+  call cursor(1, 54)
+  AssertEqual 'Template:padded', Function()
+
+Execute(Test s:get_template_name() at the beginning of out-of-line template):
+  call cursor(3, 3)
+  AssertEqual 'Template:Example', Function()
+
+Execute(Test s:get_template_name() at the beginning of anonymous parameter in out-of-line template):
+  call cursor(4, 2)
+  AssertEqual 'Template:Example', Function()
+
+Execute(Test s:get_template_name() at the end of anonymous parameter in out-of-line template):
+  call cursor(4, 6)
+  AssertEqual 'Template:Example', Function()
+
+Execute(Test s:get_template_name() at the beginning of named parameter in out-of-line template):
+  call cursor(5, 2)
+  AssertEqual 'Template:Example', Function()
+
+Execute(Test s:get_template_name() at the end of named parameter in out-of-line template):
+  call cursor(5, 11)
+  AssertEqual 'Template:Example', Function()
+
+Execute(Test s:get_template_name() at the beginning of named parameter in out-of-line template with spaces):
+  call cursor(6, 3)
+  AssertEqual 'Template:Example', Function()
+
+Execute(Test s:get_template_name() at the end of named parameter in out-of-line template with spaces):
+  call cursor(6, 7)
+  AssertEqual 'Template:Example', Function()

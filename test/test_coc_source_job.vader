@@ -1,0 +1,30 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+
+  let Function = GetFunction(b:script, 'job')
+
+  let mock = NewFunctionMock()
+
+
+After:
+  unlet! Function
+  unlet! mock
+  unlet! shell_command
+  unlet! Callback
+
+
+Execute(Test coc#source#mediawiki#complete()):
+  let shell_command = ['echo', 'foobar']
+  let Callback = mock.function
+
+  call Function(shell_command, Callback)
+  sleep 500m
+
+  AssertEqual 1, len(mock.count)
+  AssertEqual 3, len(mock.args[0])
+  AssertEqual
+  \ ['foobar', ''],
+  \ mock.args[0][1]

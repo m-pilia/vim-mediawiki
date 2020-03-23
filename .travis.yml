@@ -17,6 +17,11 @@ script:
     # Run vimscript tests
     - ./run_tests.sh --profile
 
+    # Validate Codecov configuration
+    - curl --data-binary @.codecov.yml https://codecov.io/validate | tee codecov_validation
+    - head -n 1 codecov_validation | grep 'Valid!'
+
+
 after_success: |
     set -eo pipefail
     for vim in vim neovim; do

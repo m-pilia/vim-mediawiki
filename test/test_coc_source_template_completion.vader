@@ -1,0 +1,28 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+
+  let Function = GetFunction(b:script, 'template_completion')
+
+  let g:vim_mediawiki_site = 'some_site'
+
+  let mock = NewFunctionMock()
+
+
+After:
+  unlet! b:script
+  unlet! Function
+  unlet! mock
+
+
+" Use a mock of the Python interpreter that echoes all its arguments
+Execute(Test s:template_completion()):
+
+  call Function(bufnr(''), g:vim_mediawiki_site, mock.function)
+  sleep 500m
+
+  AssertEqual 1, mock.count
+  AssertEqual 1, len(mock.args[0])
+

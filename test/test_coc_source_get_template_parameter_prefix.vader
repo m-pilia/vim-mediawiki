@@ -1,0 +1,96 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+  call ClearSyntax()
+
+  runtime syntax/mediawiki.vim
+  redraw
+
+  let Function = GetFunction(b:script, 'get_template_parameter_prefix')
+
+  function! PrepareLine(line, col)
+    let l:options = {
+    \ 'bufnr': bufnr(''),
+    \ 'line': getline(a:line),
+    \ 'colnr': a:col,
+    \ }
+
+    call cursor(a:line, a:col)
+
+    return l:options
+  endfunction
+
+
+After:
+  call ClearSettings()
+  call ClearSyntax()
+
+  unlet! b:script
+
+  delfunction PrepareLine
+
+  unlet! Function
+  unlet! options
+
+
+Given (Example text):
+  Example {{with|inline=template}} and {{ with | more = spacing }}.
+
+  {{Example
+  |with
+  |template=out
+   | of = lines
+  }}
+
+  Test <math>\text{inline math} \sin{x}</math>
+
+
+Execute(Test s:get_template_parameter_prefix() outside template):
+  let options = PrepareLine(1, 5)
+
+  AssertEqual
+  \ v:null,
+  \ Function(options)
+
+
+Execute(Test s:get_template_parameter_prefix() inside template name):
+  let options = PrepareLine(1, 13)
+
+  AssertEqual
+  \ v:null,
+  \ Function(options)
+
+
+Execute(Test s:get_template_parameter_prefix() inside inline template parameter name):
+  let options = PrepareLine(1, 19)
+
+  AssertEqual
+  \ 'inl',
+  \ Function(options)
+
+
+Execute(Test s:get_template_parameter_prefix() inside inline template parameter value):
+  let options = PrepareLine(1, 30)
+
+  AssertEqual
+  \ v:null,
+  \ Function(options)
+
+
+Execute(Test s:get_template_parameter_prefix() inside out-of-line template parameter name):
+  let options = PrepareLine(4, 4)
+
+  AssertEqual
+  \ 'wi',
+  \ Function(options)
+
+
+Execute(Test s:get_template_parameter_prefix() inside out-of-line template parameter name with space):
+  let options = PrepareLine(6, 6)
+
+  AssertEqual
+  \ 'of',
+  \ Function(options)
+

@@ -2,6 +2,19 @@ Before:
   source test/utils.vim
 
   call ClearSettings()
+  call ClearSyntax()
+
+  runtime syntax/mediawiki.vim
+  redraw
+
+  function! PrepareLine(line, col)
+    call cursor(a:line, a:col)
+    return {
+    \ 'bufnr': bufnr(''),
+    \ 'line': getline(a:line),
+    \ 'colnr': a:col,
+    \ }
+  endfunction
 
   let g:vim_mediawiki_site = 'some_site'
   let g:vim_mediawiki_completion_prefix_length = 5
@@ -21,13 +34,28 @@ After:
   unlet! g:vim_mediawiki_site
   unlet! b:vim_mediawiki_site
 
+  call ClearSettings()
+  call ClearSyntax()
+
+  delfunction PrepareLine
+
+
+Given (Example text):
+  foo bar {{Some text and more}} after
+  foo bar {{#Some text and more}} after
+  foo bar [[Some|text and more]] after
+
+  Example {{with|inline=template}} and {{ with | more = spacing }}.
+
+  {{Example
+  |with
+  |template=out
+   | of = lines
+  }}
+
 
 Execute(Test coc#source#mediawiki#should_complete() with completion):
-  let options = {
-  \ 'bufnr': bufnr(''),
-  \ 'line': 'foo bar {{Some text and more}} after',
-  \ 'colnr': 20,
-  \ }
+  let options = PrepareLine(1, 20)
 
   Assert
   \ coc#source#mediawiki#should_complete(options),
@@ -35,11 +63,7 @@ Execute(Test coc#source#mediawiki#should_complete() with completion):
 
 
 Execute(Test coc#source#mediawiki#should_complete() on parser function):
-  let options = {
-  \ 'bufnr': bufnr(''),
-  \ 'line': 'foo bar {{#Some text and more}} after',
-  \ 'colnr': 20,
-  \ }
+  let options = PrepareLine(2, 20)
 
   Assert
   \ !coc#source#mediawiki#should_complete(options),
@@ -47,12 +71,25 @@ Execute(Test coc#source#mediawiki#should_complete() on parser function):
 
 
 Execute(Test coc#source#mediawiki#should_complete() after pipe):
-  let options = {
-  \ 'bufnr': bufnr(''),
-  \ 'line': 'foo bar [[Some|text and more]] after',
-  \ 'colnr': 20,
-  \ }
+  let options = PrepareLine(3, 20)
 
   Assert
   \ !coc#source#mediawiki#should_complete(options),
   \ 'Do not complete after a pipe'
+
+
+Execute(Test coc#source#mediawiki#should_complete() on template parameter name inline):
+  let options = PrepareLine(5, 22)
+
+  Assert
+  \ coc#source#mediawiki#should_complete(options),
+  \ 'Complete a template parameter name inline'
+
+
+Execute(Test coc#source#mediawiki#should_complete() on template parameter name out-of-line):
+  let options = PrepareLine(10, 7)
+
+  Assert
+  \ coc#source#mediawiki#should_complete(options),
+  \ 'Complete a template parameter name out-of-line'
+

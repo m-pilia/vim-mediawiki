@@ -1,0 +1,48 @@
+Before:
+  let b:script = 'autoload/coc/source/mediawiki.vim'
+  source test/utils.vim
+
+  call ClearSettings()
+
+  let Function = GetFunction(b:script, 'get_menu')
+
+
+After:
+  unlet! Function
+
+  unlet! name
+  unlet! data
+
+
+Execute(Test s:get_menu() with only name):
+  let name = 'Some name'
+  let data = {}
+
+  AssertEqual
+  \ 'Some name',
+  \ Function(name, data)
+
+
+Execute(Test s:get_menu() with label):
+  let name = 'Some name'
+  let data = {
+  \   'label': {'en': 'Some label'},
+  \ }
+
+  AssertEqual
+  \ "Some label",
+  \ Function(name, data)
+
+
+Execute(Test s:get_menu() with deprecation):
+  let name = 'Some name'
+  let data = {
+  \   'label': {'en': 'Some label'},
+  \   'deprecated': v:true,
+  \ }
+
+  AssertEqual
+  \ 'Some label (deprecated)',
+  \ Function(name, data)
+
+

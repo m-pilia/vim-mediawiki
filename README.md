@@ -9,7 +9,7 @@ provides:
 * filetype detection
 * improved syntax highlighting
 * page preview
-* auto-completion of links and templates with a
+* semantic auto-completion of links and templates with a
   [coc.nvim](https://github.com/neoclide/coc.nvim) source
 * [UltiSnips](https://github.com/SirVer/ultisnips) snippets
 * `<plug>` mappings for text objects
@@ -35,6 +35,13 @@ completions will be suggested when typing more than one word inside the
 brackets, together with a hint of the full page name.
 
 ![image](https://user-images.githubusercontent.com/8300317/68047476-2894dc00-fce7-11e9-9f7f-9be1c0485616.png)
+
+When inserting a template, semantic completion of parameter names is provided,
+and the documentation for each parameter is provided in the floating window,
+based on the
+[TemplateData](https://www.mediawiki.org/wiki/Extension:TemplateData) API.
+
+![image](https://user-images.githubusercontent.com/8300317/77249684-35d54780-6c43-11ea-9d39-aa16d7a983e1.png)
 
 You can refer to the relevant [upstream
 documentation](https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources)

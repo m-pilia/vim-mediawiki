@@ -5,3 +5,4 @@ profile_file*
 coverage.xml
 python_output
 browser_output
+codecov_validation

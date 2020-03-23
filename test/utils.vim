@@ -112,3 +112,9 @@ function! ClearSettings()
         unlet! b:{var}
     endfor
 endfunction
+
+" Clear current syntax highlighting
+function! ClearSyntax()
+    syntax clear
+    unlet! b:current_syntax
+endfunction
