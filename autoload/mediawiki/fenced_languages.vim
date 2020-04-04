@@ -17,6 +17,7 @@ let s:mediawiki_wikilang_to_vim = {
 \   'bash': 'sh',
 \   'bibtex': 'bib',
 \   'c': 'c',
+\   'c++': 'cpp',
 \   'chaiscript': 'chaiscript',
 \   'clojure': 'clojure',
 \   'cmake': 'cmake',
@@ -99,10 +100,11 @@ function! s:find_languages_in_buffer() abort
     let l:save_cursor = getpos('.')
     let l:languages_dict = {}
     call cursor('$', 1)
+    let l:pattern = '\v.*\<\s*%(source|syntaxhighlight)\s+lang\s*\=\s*["'']([^"'']+)["'']\s*\>.*'
     let l:flags = 'w'
-    while search('<\(source\|syntaxhighlight\)\s\+lang="', l:flags) > 0
+    while search(l:pattern, l:flags) > 0
         " Assumes there is only one match per line
-        let l:lang = substitute(getline('.'), '.*<\(source\|syntaxhighlight\)\s\+lang="\(\w\+\)".*', '\2', '')
+        let l:lang = tolower(substitute(getline('.'), l:pattern, '\1', ''))
         let l:languages_dict[l:lang] = 1
         " Do not wrap search anymore
         let l:flags = 'W'
@@ -146,7 +148,7 @@ endfunction
 function! s:define_region(filetype, tag, group_name, wiki_lang) abort
     " Region containing opening/closing tags and code
     exe 'syntax region wiki_' . a:filetype . '_region_' . a:tag . ' '
-    \   'start=/\v\<' . a:tag . '\s+lang\=\"' . a:wiki_lang . '\"\>/ ' .
+    \   'start=/\c\V<' . a:tag . '\s\+lang="' . a:wiki_lang . '">/ ' .
     \   'end=/\v\<\/' . a:tag . '\>/ '.
     \   'keepend contains=wikiSourceTag,' .
     \                     'wikiSourceEndTag,' .
