@@ -16,7 +16,7 @@ After:
 
 Given(Text with code tags):
   This is an example containing inline
-  <source lang="cpp"> std::cout << "Hello!" << std::endl </source>
+  <source lang="C++"> std::cout << "Hello!" << std::endl </source>
   and outline
   <source lang="c">
   int some_code(void) {
@@ -47,7 +47,7 @@ Execute(Test s:find_languages_in_buffer()):
   let Function = GetFunction(b:script, 'find_languages_in_buffer')
 
   AssertEqual
-  \ ['c', 'cpp', 'haskell', 'java', 'python'],
+  \ ['c', 'c++', 'haskell', 'java', 'python'],
   \ sort(Function())
 
 
@@ -67,7 +67,7 @@ Execute(Test s:define_region() for <source> tags inline):
 
   runtime syntax/mediawiki.vim
 
-  call Function('cpp',  'source', 'some_group_name', 'cpp')
+  call Function('cpp',  'source', 'some_group_name', 'c++')
 
   AssertEqual
   \ 'wiki_cpp_region_source_code',
