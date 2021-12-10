@@ -1,0 +1,49 @@
+name: Checks
+
+on: [push, pull_request]
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Install dependencies
+      run: |
+        pip install --user codecov==2.0.15 covimerage==0.2.1 mwclient==0.10.0 flake8==3.7.8 coverage==4.5.4
+
+    - name: Run Python tests
+      shell: bash
+      run: |
+        python -m coverage run -m unittest discover test
+        coverage xml -o coverage_python.xml
+
+    - name: Run vimscript tests
+      shell: bash
+      run: |
+        ./run_tests.sh --profile
+
+    - name: Generate vimscript coverage report
+      run: |
+        set -eo pipefail
+        for vim in vim neovim; do
+            profile_file=$(ls | grep "profile_file_${vim}" | sort | tail -n 1)
+            sed -i "s,/testplugin/,$PWD/,g" "$profile_file"
+            python -m covimerage write_coverage --source "$(pwd)" --append "${profile_file}"
+        done
+        python -m covimerage -vv xml
+        python -m covimerage report -m
+
+    - name: Validate Codecov configuration
+      shell: bash
+      run: |
+        curl --data-binary @.codecov.yml https://codecov.io/validate | tee codecov_validation
+        head -n 1 codecov_validation | grep 'Valid!'
+
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v2.1.0
+      with:
+        fail_ci_if_error: true
+        verbose: true
