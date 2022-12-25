@@ -5,21 +5,21 @@ import sys
 import mwclient
 
 style_modules = [
-    'mediawiki.legacy.commonPrint,shared',
-    'mediawiki.skinning.elements',
-    'mediawiki.skinning.content',
-    'mediawiki.skinning.interface',
-    'skins.vector.styles',
-    'site',
-    'site.styles',
-    'mediawiki.skinning.content.parsoid',
-    'ext.cite.style',
+    'ext.cite.styles',
+    'ext.echo.styles.badge',
+    'ext.math.styles',
+    'ext.uls.interlanguage',
+    'ext.visualEditor.desktopArticleTarget.noscript',
+    'ext.wikimediaBadges',
+    'oojs-ui.styles.icons-alerts',
+    'skins.vector.styles.legacy',
+    'wikibase.client.init',
 ]
 
 css_link = '<link rel="stylesheet" href="https://{site}/w/load.php?{args}"/>'
 js_link = '<script async="" src="/w/load.php?{args}"></script>'
 
-html = r'''\
+html = r'''
 <!DOCTYPE html>
 <html class="client-nojs" dir="ltr">
 <head>
