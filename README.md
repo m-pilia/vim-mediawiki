@@ -20,8 +20,8 @@ Installation
 ============
 
 The plugin can be installed with any package manager. Prerequisites are vim
-8.1+ or neovim 0.4+, a working Python3 installation, and the `wmclient` Python
-package (`pip install wmclient`).
+8.1+ or neovim 0.4+, a working Python3 installation, and the `mwclient` Python
+package (`pip install mwclient`).
 
 Auto-completion
 ===============
