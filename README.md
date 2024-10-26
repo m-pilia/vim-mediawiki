@@ -9,8 +9,8 @@ provides:
 * filetype detection
 * improved syntax highlighting
 * page preview
-* semantic auto-completion of links and templates with a
-  [coc.nvim](https://github.com/neoclide/coc.nvim) source
+* semantic auto-completion of links and templates with
+  [coc.nvim](https://github.com/neoclide/coc.nvim) and [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) sources
 * [UltiSnips](https://github.com/SirVer/ultisnips) snippets
 * `<plug>` mappings for text objects
 * matching pairs for [matchit.vim](https://github.com/vim/vim/blob/master/runtime/pack/dist/opt/matchit/doc/matchit.txt)
@@ -28,7 +28,20 @@ Auto-completion
 
 If [coc.nvim](https://github.com/neoclide/coc.nvim) is installed and configured
 properly, the completion source should work out-of-the-box for buffers of type
-`mediawiki`. Completion is triggered when typing inside double square brackets
+`mediawiki`.
+
+For [nvim-cmp](https://github.com/hrsh7th/nvim-cmp), add the `cmp_mediawiki`
+source:
+```lua
+require('vim-mediawiki.cmp_mediawiki')
+require('cmp').setup({
+    sources = {
+        {name = 'cmp_mediawiki'},
+    },
+})
+```
+
+Completion is triggered when typing inside double square brackets
 or double braces, and the minimum number of characters to type before
 completion can be configured. Multi-word completion is supported, so
 completions will be suggested when typing more than one word inside the
